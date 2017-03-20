@@ -53,11 +53,24 @@ public abstract class Learner {
     /**
      * Calulates the utility value with the specified weights.
      *
+     * NOTE: The first element of `features` need to be equal to 1 in order to
+     * take into account `w(0)` (the zero-th weight) for our utility function.
+     *
      * @return utility value obtained from the weights
      */
-    protected int getUtilityValue(int[] weights) {
-        // TODO: Stubbed
-        return 0;
+    protected int getUtilityValue(int[] weights, int[] features) {
+        // Zero-th feature should be equal to 1
+        assert features[0] == 1;
+
+        // Weights and features should have the same length
+        assert weights.length == features.length;
+
+        int result = 0;
+        for (int i = 0; i < weights.length; i++) {
+            result += weights[i] * features[i];
+        }
+
+        return result;
     }
 
     /**
