@@ -1,6 +1,7 @@
 public class PlayerSkeleton {
 
     // Implement this function to have a working system
+    // Legal move, 2D array: [Orientation, Slot]
     public int pickMove(State s, int[][] legalMoves) {
         return 0;
     }
