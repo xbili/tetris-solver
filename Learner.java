@@ -47,7 +47,7 @@ public abstract class Learner {
         if (display) new TFrame(state);
 
         while(!state.hasLost()) {
-            state.makeMove(player.pickMove(state, state.legalMoves()));
+            state.makeMove(player.pickMove(state, state.legalMoves(), weights));
             if (display) draw(state);
         }
 

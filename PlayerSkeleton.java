@@ -6,6 +6,10 @@ public class PlayerSkeleton {
         return 0;
     }
 
+    public int pickMove(State s, int[][] legalMoves, int[] weights) {
+        return 0;
+    }
+
     public static void main(String[] args) {
         State s = new State();
         new TFrame(s);
