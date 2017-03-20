@@ -78,7 +78,7 @@ public abstract class Learner {
     }
 
     /**
-     * The learning is to be implemented by each class.
+     * XLearner class should, and needs to override this method.
      *
      * @return updated weight after ONE iteration of the learning algorithm
      */
