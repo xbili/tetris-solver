@@ -17,6 +17,10 @@ public abstract class Learner {
         int[] weights = initialWeights;
         while (iterations > 0) {
             weights = learn(weights);
+
+            // TODO: Check for convergence of weights, we can leave this out
+            // for now first.
+
             iterations--;
         }
 
