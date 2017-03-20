@@ -55,7 +55,7 @@ public abstract class Learner {
     }
 
     /**
-     * Calulates the utility value with the specified weights.
+     * Calculates the utility value with the specified weights.
      *
      * NOTE: The first element of `features` need to be equal to 1 in order to
      * take into account `w(0)` (the zero-th weight) for our utility function.
