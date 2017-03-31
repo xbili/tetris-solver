@@ -10,8 +10,6 @@ public class GeneticLearner extends Learner {
   private float[] learnedWeights;
 
   private Random rand;
-  private static final int RAND_MAX = 10000;
-  private static final int RAND_DIV = 1000;
 
   public GeneticLearner(int populationSize, int numWeights) {
     this.numWeights = numWeights;
@@ -72,4 +70,65 @@ public class GeneticLearner extends Learner {
     float[] res = gl.learn(nIterations);
     System.out.println("Learned weights: " + Arrays.toString(res));
   }
+}
+
+class Individual {
+  static int numGenes = 10;
+  static int geneAllowedMax = 1;
+  static int geneAllowedMin = -1;
+
+  private float[] genes = new float[numGenes];
+  private int fitnessValue;
+
+  private static Random rand = new Random();
+
+  public Individual() {}
+
+  /* Global control */
+  public static void setDefaultValues(int numGenes, float geneAllowedMax, float geneAllowedMin) {
+    this.numGenes = numGenes;
+    this.geneAllowedMax = geneAllowedMax;
+    this.geneAllowedMin = geneAllowedMin;
+  }
+
+  public int getFitnessValue() {
+    return fitnessValue;
+  }
+  public void setFitnessValue(int fitnessValue) {
+    this.fitnessValue = fitnessValue;
+  }
+
+  public float[] getAllGenes() {
+    return this.genes;
+  }
+  public float getGene(int index) {
+    assert index>=0;
+    assert index<numGenes;
+    return this.genes[index];
+  }
+  public void setGene(int index, float value) {
+    assert index>=0;
+    assert index<numGenes;
+    this.genes[index] = value;
+  }
+
+  public void randGeneValue() {
+    return randFloat()*(geneAllowedMax-geneAllowedMin)+geneAllowedMin;
+  }
+  public void randAllGenes() {
+    for(int i=0; i<numGenes; i++) {
+      this.setGene(i, randGeneValue());
+    }
+  }
+
+  // TODO: MOVE to evolve segment
+  public void mutate() {
+    this.setGene(rand.nextInt(numGenes), randGeneValue());
+  }
+
+  @Override
+  public String toString() {
+    return Array.toString(this.genes);
+  }
+
 }
