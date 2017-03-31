@@ -43,7 +43,8 @@ public class GameRunner {
             weights[i] = Float.parseFloat(args[i]);
         }
         float result = run(new State(), weights);
-        System.out.printf("%0.2f\n", result);
+        System.out.print(result);
+        //System.out.printf("%0.2f\n", result);
     }
 }
 
