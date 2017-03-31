@@ -8,10 +8,13 @@ public class PlayerSkeleton {
     // Implement this function to have a working system
     // Legal move, 2D array: [Orientation, Slot]
     public int pickMove(State s, int[][] legalMoves) {
+        int[] features = getFeatures(s);
+//        printArray(features);
         return 0;
     }
 
     public int pickMove(State s, int[][] legalMoves, float[] weights) {
+
         return 0;
     }
 
@@ -22,12 +25,14 @@ public class PlayerSkeleton {
      */
     private static int[] getColumnHeights(State s) {
         int[] heights = new int[10];
+        Arrays.fill(heights,0);
         int[][] field = s.getField();
-        for (int row = 0; row < ROWS; row ++) {
+
+        for (int row = ROWS-1; row >= 0; row --) {
             for (int col = 0; col < COLS; col ++) {
                 if (field[row][col] != 0) {
-                    if (heights[col] != 0) {
-                        heights[col] = ROWS - row;
+                    if (heights[col] == 0) {
+                        heights[col] = row;
                     }
                 }
             }
@@ -63,27 +68,18 @@ public class PlayerSkeleton {
     }
 
     private static boolean inGameBoundary(int row, int col) {
-        return (row >= 0 && row <= ROWS && col >=0 && col <= COLS);
+        return (row >= 0 && row < ROWS && col >=0 && col < COLS);
     }
     private static boolean isHole(int[][] field, int row, int col) {
-        return (inGameBoundary(row-1, col-1) &&
-                inGameBoundary(row, col-1) &&
-                inGameBoundary(row+1, col-1) &&
-                inGameBoundary(row-1, col) &&
-                inGameBoundary(row, col) &&
-                inGameBoundary(row+1, col) &&
-                inGameBoundary(row-1, col+1) &&
-                inGameBoundary(row, col+1) &&
-                inGameBoundary(row+1, col+1) &&
-                field[row-1][col-1] !=0 &&
-                field[row][col-1] !=0 &&
-                field[row+1][col-1] !=0 &&
-                field[row-1][col] !=0 &&
-                field[row][col] ==0 &&
-                field[row+1][col] !=0 &&
-                field[row-1][col+1] !=0 &&
-                field[row][col+1] !=0 &&
-                field[row+1][col+1] !=0);
+        return ((!inGameBoundary(row-1, col-1) || field[row-1][col-1] !=0) &&
+                (!inGameBoundary(row, col-1) || field[row][col-1] !=0) &&
+                (!inGameBoundary(row+1, col-1) || field[row+1][col-1] !=0) &&
+                (!inGameBoundary(row-1, col)|| field[row-1][col] !=0) &&
+                (inGameBoundary(row, col) || field[row][col] ==0) &&
+                (!inGameBoundary(row+1, col) || field[row+1][col] == 0) &&
+                (!inGameBoundary(row-1, col+1) || field[row-1][col+1] !=0) &&
+                (!inGameBoundary(row, col+1) || field[row][col+1] !=0) &&
+                (!inGameBoundary(row+1, col+1)  || field[row+1][col+1] !=0));
     }
     /**
      * Feature 21: Number of Holes
@@ -141,9 +137,9 @@ public class PlayerSkeleton {
     }
 
     /**
-     * Feature 24: Calculated feature
+     * Calculated feature
      * @param s: state
-     * @return array of values for feature 0-21
+     * @return calculated features
      */
     private static int[] getFeatures(State s) {
         ArrayList<Integer> features = new ArrayList<>(21);
@@ -157,10 +153,26 @@ public class PlayerSkeleton {
         }
         features.add(getMaximumColumnHeight(s));
         features.add(getNumberOfHoles(s));
+
         return features.stream().mapToInt(i -> i).toArray();
 
     }
 
+    private static void printArray(int[] as) {
+        for (int a : as) {
+            System.out.printf("%d, ", a);
+        }
+        System.out.println();
+    }
+    private static void printField(State s) {
+        int[][] field = s.getField();
+        for (int row = 0; row < ROWS; row ++) {
+            for (int col = 0; col < COLS; col ++) {
+                System.out.printf("%2d ", field[row][col]);
+            }
+            System.out.println();
+        }
+    }
     /**
      * Calculates the utility value with the specified weights.
      *
