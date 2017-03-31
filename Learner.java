@@ -40,7 +40,7 @@ public abstract class Learner {
      *
      * @return number of blocks cleared by the agent
      */
-    protected int run(State state, int[] weights) {
+    protected int run(State state, float[] weights) {
         PlayerSkeleton player = new PlayerSkeleton();
 
         // Create new display frame only if display setting is true
@@ -62,7 +62,7 @@ public abstract class Learner {
      *
      * @return utility value obtained from the weights
      */
-    protected int getUtilityValue(int[] weights, int[] features) {
+    protected int getUtilityValue(float[] weights, int[] features) {
         // Zero-th feature should be equal to 1
         assert features[0] == 1;
 
