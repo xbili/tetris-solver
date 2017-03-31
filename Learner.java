@@ -12,9 +12,9 @@ public abstract class Learner {
      *
      * @return optimized weight after learning has taken place
      */
-    public int[] start(int[] initialWeights, int maxIterations) {
+    public float[] start(float[] initialWeights, int maxIterations) {
         int iterations = maxIterations;
-        int[] weights = initialWeights;
+        float[] weights = initialWeights;
         while (iterations > 0) {
             weights = learn(weights);
 
@@ -82,7 +82,7 @@ public abstract class Learner {
      *
      * @return updated weight after ONE iteration of the learning algorithm
      */
-    protected abstract int[] learn(int[] weights);
+    protected abstract float[] learn(float[] weights);
 
     /**
      * Draws updated state onto the TFrame
@@ -98,4 +98,3 @@ public abstract class Learner {
     }
 
 }
-
