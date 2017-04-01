@@ -158,6 +158,7 @@ public class ExtendedState extends State {
         ExtendedState es = new ExtendedState(this);
         es.makeMove(move);
         return getFeatures();
+
     }
 
     /**
