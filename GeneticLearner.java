@@ -15,7 +15,7 @@ public class GeneticLearner extends Learner {
     float[] res = new float[0];
     for (int i=0; i<iterations; i++) {
       res = learn(initialWeights);
-      // System.out.println("Fitness: " + pop.getFittest().getFitnessValue());
+      System.out.println("Fitness: " + pop.getFittest().getFitnessValue());
       pop.evolve();
     }
     return res;
@@ -33,7 +33,7 @@ public class GeneticLearner extends Learner {
     return this.pop.getFittest().getAllGenes();
   }
 
-  public static void main() {
+  public static void main(String[] args) {
     int nPopulation=100, nWeights=10, nIterations=100;
     float maxWeightValue=10.0f, minWeightValue=-5.0f;
 
