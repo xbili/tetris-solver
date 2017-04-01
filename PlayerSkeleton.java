@@ -36,26 +36,10 @@ public class PlayerSkeleton {
           maxUtil = currUtil;
         }
       }
-      System.out.println("Making move: " + maxMove);
+      Log.debug("Making move: " + maxMove);
       return maxMove;
     }
 
-
-    private static void printArray(int[] as) {
-        for (int a : as) {
-            System.out.printf("%d, ", a);
-        }
-        System.out.println();
-    }
-    private static void printField(State s) {
-        int[][] field = s.getField();
-        for (int row = 0; row < ROWS; row ++) {
-            for (int col = 0; col < COLS; col ++) {
-                System.out.printf("%2d ", field[row][col]);
-            }
-            System.out.println();
-        }
-    }
     /**
      * Calculates the utility value with the specified weights.
      *
