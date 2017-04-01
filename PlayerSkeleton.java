@@ -28,9 +28,9 @@ public class PlayerSkeleton {
       Float maxUtil = 0.0f;
       int maxMove = 0;
       for (int i=0; i<legalMoves.length; i++) {
-        System.out.println(">>> option " + i);
+//        System.out.println(">>> option " + i);
         Float currUtil = getUtilityValue(weights, s.test(i));
-        System.out.println("util: " + currUtil);
+//        System.out.println("util: " + currUtil);
         if (maxUtil < currUtil) {
           maxMove = i;
           maxUtil = currUtil;
