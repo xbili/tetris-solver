@@ -1,55 +1,68 @@
 import java.util.Random;
 import java.util.Arrays;
+import java.lang.Math;
+
+/** References:
+    http://www.theprojectspot.com/tutorial-post/creating-a-genetic-algorithm-for-beginners/3
+    http://stackoverflow.com/questions/1575061/ga-written-in-java */
 
 public class GeneticLearner extends Learner {
   private Population pop;
 
-  public GeneticLearner(int popSize, int numWeights, float maxWeightValue, float minWeightValue) {
+  public GeneticLearner(int popSize, int numWeights, Float maxWeightValue, Float minWeightValue) {
     Individual.setDefaultValues(numWeights, maxWeightValue, minWeightValue);
     pop = new Population(popSize, true);
   }
 
   // TODO:: initialWeights does not apply for GA.
   @Override
-  public float[] start(float[] initialWeights, int iterations) {
-    float[] res = new float[0];
+  public Float[] start(Float[] initialWeights, int iterations) {
+    Float[] res = new Float[0];
     for (int i=0; i<iterations; i++) {
       res = learn(initialWeights);
       System.out.println("Fitness: " + pop.getFittest().getFitnessValue());
+      System.out.println("Fittest's weight: " + Arrays.toString(pop.getFittest().getAllGenes()));
       pop.evolve();
     }
     return res;
   }
 
   // TODO: weights[] does not apply
-  protected float[] learn(float[] weights) {
+  protected Float[] learn(Float[] weights) {
     // Play a game with each Individual and update its fitness value
     for(int i=0; i<this.pop.getSize(); i++) {
       // TODO: Test whether playing multiple games and taking average/minimum matters
-      int currFitness = this.run(new State(), this.pop.getIndividual(i).getAllGenes());
+      int currFitness = 0;
+      for (int j=0; j<3; j++) {
+        currFitness = Math.max(currFitness, this.run(new ExtendedState(), this.pop.getIndividual(i).getAllGenes()));
+      }
       this.pop.getIndividual(i).setFitnessValue(currFitness);
+      // System.out.println(currFitness + " : " + Arrays.toString(this.pop.getIndividual(i).getAllGenes()));
+      // System.out.println(currFitness);
     }
     // Return the weights from the best Individual
     return this.pop.getFittest().getAllGenes();
   }
 
   public static void main(String[] args) {
-    int nPopulation=100, nWeights=10, nIterations=100;
-    float maxWeightValue=10.0f, minWeightValue=-5.0f;
+    int nPopulation=100, nIterations=200;
+    Float maxWeightValue=50.0f, minWeightValue=-50.0f;
+    int nWeights = ExtendedState.NUM_FEATURES;
 
+    System.out.println("New GeneticLearner");
     GeneticLearner gl = new GeneticLearner(nPopulation,nWeights,maxWeightValue,minWeightValue);
-    float[] res = gl.start(new float[1], nIterations);
+    Float[] res = gl.start(new Float[1], nIterations);
     System.out.println("Learned weights: " + Arrays.toString(res));
 
     // Test the final result
     gl.setDisplay(true);
-    System.out.println(gl.run(new State(), res));
+    System.out.println("Final score: " + Integer.toString(gl.run(new ExtendedState(), res)));
   }
 }
 
 class Population {
-  private static final float MUTATION_PROB = 0.05f;  // Probability of mutation
-  private static final float FIFTY_PERCENT = 0.5f;   // For selecting parent in crossover
+  private static final Float MUTATION_PROB = 0.02f;  // Probability of mutation
+  private static final Float FIFTY_PERCENT = 0.5f;   // For selecting parent in crossover
   private static final int TOURNAMENT_SIZE = 5;     // Using tournament selection method
 
   private static Random rand = new Random();
@@ -85,7 +98,7 @@ class Population {
   }
 
   public Individual getFittest() {
-    Individual fittest = this.individuals[0];
+    Individual fittest = this.individuals[rand.nextInt(this.size)];
     for (int i=0; i<this.size; i++) {
       if (fittest.getFitnessValue() < this.individuals[i].getFitnessValue()){
         fittest = this.individuals[i];
@@ -118,7 +131,7 @@ class Population {
     Individual child = new Individual();
 
     for (int i=0; i<Individual.getNumGenes(); i++) {
-      float newGene = (rand.nextFloat()<FIFTY_PERCENT) ? parentA.getGene(i) : parentB.getGene(i);
+      Float newGene = (rand.nextFloat()<FIFTY_PERCENT) ? parentA.getGene(i) : parentB.getGene(i);
       child.setGene(i, newGene);
     }
 
@@ -136,9 +149,11 @@ class Population {
     return tournament.getFittest();
   }
 
-  private void attemptMutation(Individual i) {
-    if (rand.nextFloat() < MUTATION_PROB) {
-      i.setGene(rand.nextInt(Individual.getNumGenes()), Individual.randGeneValue());
+  private void attemptMutation(Individual indiv) {
+    for (int i=0; i<Individual.getNumGenes(); i++) {
+      if (rand.nextFloat() < MUTATION_PROB) {
+        indiv.setGene(i, Individual.randGeneValue());
+      }
     }
   }
 }
@@ -147,16 +162,16 @@ class Individual {
   private static Random rand = new Random();
 
   static int numGenes = 10;
-  static float geneAllowedMax = 1.0f;
-  static float geneAllowedMin = -1.0f;
+  static Float geneAllowedMax = 1.0f;
+  static Float geneAllowedMin = -1.0f;
 
-  private float[] genes = new float[numGenes];
+  private Float[] genes = new Float[numGenes];
   private int fitnessValue;
 
   public Individual() {}
 
   /* Global control */
-  public static void setDefaultValues(int nGenes, float gAllowedMax, float gAllowedMin) {
+  public static void setDefaultValues(int nGenes, Float gAllowedMax, Float gAllowedMin) {
     numGenes = nGenes;
     geneAllowedMax = gAllowedMax;
     geneAllowedMin = gAllowedMin;
@@ -164,7 +179,7 @@ class Individual {
   public static int getNumGenes() {
     return numGenes;
   }
-  public static float randGeneValue() {
+  public static Float randGeneValue() {
     return rand.nextFloat()*(geneAllowedMax-geneAllowedMin)+geneAllowedMin;
   }
 
@@ -176,13 +191,13 @@ class Individual {
     this.fitnessValue = fitnessValue;
   }
 
-  public float[] getAllGenes() {
+  public Float[] getAllGenes() {
     return this.genes;
   }
-  public float getGene(int index) {
+  public Float getGene(int index) {
     return this.genes[index];
   }
-  public void setGene(int index, float value) {
+  public void setGene(int index, Float value) {
     this.genes[index] = value;
   }
 

@@ -11,7 +11,6 @@ public class PlayerSkeleton {
     // Legal move, 2D array: [Orientation, Slot]
     public int pickMove(ExtendedState s, int[][] legalMoves) {
         Float[] weights = fakeWeights(ExtendedState.NUM_FEATURES);
-//        printArray(features);
         return pickMove(s, legalMoves, weights);
     }
     // Testing only.
@@ -28,15 +27,12 @@ public class PlayerSkeleton {
       Float maxUtil = 0.0f;
       int maxMove = 0;
       for (int i=0; i<legalMoves.length; i++) {
-//        System.out.println(">>> option " + i);
         Float currUtil = getUtilityValue(weights, s.test(i));
-//        System.out.println("util: " + currUtil);
         if (maxUtil < currUtil) {
           maxMove = i;
           maxUtil = currUtil;
         }
       }
-      Log.debug("Making move: " + maxMove);
       return maxMove;
     }
 
