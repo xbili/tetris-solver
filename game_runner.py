@@ -6,7 +6,7 @@ from subprocess import Popen, PIPE
 
 # One run of the game
 def one_iter(args):
-    GameRunner.main(args)
+    # GameRunner.main(args)
     with Popen(['java', 'GameRunner', *args], stdout=PIPE) as proc:
         return proc.stdout.read()
 
@@ -24,7 +24,8 @@ def run_game(n, args, update):
     return args
 
 def run(weights, display=False):
-    result = int(one_iter(weights))
+    args = [str(weights[i]) for i in range(0, 21)]
+    result = int(one_iter(args))
     print(result)
     return result
 

@@ -3,7 +3,7 @@
  */
 public class GameRunner {
 
-    private static boolean display = true;
+    private static boolean display = false;
 
     /**
      * Runs the game using the specified weights.
