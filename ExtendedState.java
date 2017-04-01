@@ -6,7 +6,7 @@ import java.util.Arrays;
  */
 public class ExtendedState extends State {
 
-    public static final int NUM_FEATURES = 21;
+    public static final int NUM_FEATURES = 13;
 
     ExtendedState previousState = null;
     public boolean isCloned = false;
