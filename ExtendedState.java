@@ -7,7 +7,6 @@ import java.util.Arrays;
 public class ExtendedState extends State {
 
     public static final int NUM_FEATURES = 21;
-    private float[] features = new float[NUM_FEATURES];
 
     ExtendedState previousState = null;
     public boolean isCloned = false;
@@ -21,7 +20,7 @@ public class ExtendedState extends State {
     public ExtendedState(State s) {
       this.clonedTurn = s.getTurnNumber();
       this.clonedCleared = s.getRowsCleared();
-      this.clonedField = get2dClone(s.getField(), State.ROWS);
+      this.clonedField = get2dClone(s.getField(), ROWS);
       this.clonedTop = s.getTop().clone();
       this.isCloned = true;
       this.nextPiece = s.getNextPiece();
@@ -71,9 +70,23 @@ public class ExtendedState extends State {
             {{1,2,2},{3,2}},
             {{2,2,1},{2,3}}
     };
+
     private int randomPiece() {
         return (int)(Math.random()*N_PIECES);
     }
+
+
+    // Make a move based on the move index - its order in the legalMoves list
+    public void makeMove(int move) {
+      System.out.println(Arrays.toString(this.legalMoves[0][0]));
+        makeMove(legalMoves[nextPiece][move]);
+    }
+
+    // Make a move based on an array of orient and slot
+    public void makeMove(int[] move) {
+        makeMove(move[ORIENT],move[SLOT]);
+    }
+
 
     public boolean makeMove(int orient, int slot) {
         this.previousState = new ExtendedState(this);
@@ -290,6 +303,8 @@ public class ExtendedState extends State {
         }
         features.add((float)getMaximumColumnHeight());
         features.add((float)getNumberOfHoles());
+
+        System.out.println(Arrays.toString(features.toArray()));
 
         return features.stream().map(i -> (float)i).toArray(Float[]::new);
 

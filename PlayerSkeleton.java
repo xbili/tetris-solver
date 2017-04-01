@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Random;
 
 public class PlayerSkeleton {
     private static final int ROWS = 21;
@@ -9,21 +10,34 @@ public class PlayerSkeleton {
     // Implement this function to have a working system
     // Legal move, 2D array: [Orientation, Slot]
     public int pickMove(ExtendedState s, int[][] legalMoves) {
-        Float[] features = s.getFeatures();
+      Float[] weights = fakeWeights(ExtendedState.NUM_FEATURES);
 //        printArray(features);
-        return 0;
+        return pickMove(s, legalMoves, weights);
+    }
+
+    // Testing only.
+    public Float[] fakeWeights(int numWeights) {
+      Random rand = new Random();
+      Float[] arr = new Float[numWeights];
+      for (int i=0; i<numWeights; i++) {
+        arr[i] = rand.nextFloat() * numWeights;
+      }
+      return arr;
     }
 
     public int pickMove(ExtendedState s, int[][] legalMoves, Float[] weights) {
       Float maxUtil = 0.0f;
       int maxMove = 0;
       for (int i=0; i<legalMoves.length; i++) {
+        System.out.println("option " + i);
         Float currUtil = getUtilityValue(weights, s.test(i));
+        System.out.println(currUtil);
         if (maxUtil < currUtil) {
           maxMove = i;
           maxUtil = currUtil;
         }
       }
+      System.out.println("Making move: " + maxMove);
       return maxMove;
     }
 
