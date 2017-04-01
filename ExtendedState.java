@@ -307,8 +307,8 @@ public class ExtendedState extends State {
             }
         features.add((float)getMaximumColumnHeight());
         features.add((float)getNumberOfHoles());
-        features.add((float) getNumberOfHolesMade());
-        features.add((float) getNumberOfLinesCleared());
+//        features.add((float) getNumberOfHolesMade());
+//        features.add((float) getNumberOfLinesCleared());
 
         return features.stream().map(i -> (float)i).toArray(Float[]::new);
 

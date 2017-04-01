@@ -56,7 +56,7 @@ public class GameRunner {
         }
 
         int result = run(new ExtendedState(), weights);
-        Log.info(String.format("%d", result));
+//        Log.info(String.format("%d", result));
         System.out.printf("%d\n", result);
     }
     public static void listen() {

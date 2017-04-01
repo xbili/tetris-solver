@@ -8,6 +8,7 @@ class GameRunner:
     java_in = None
     java_out = None
     java_err = None
+    num_iter = 0
     # One run of the game
     def spin_up(self):
         # GameRunner.main(args)
@@ -15,6 +16,9 @@ class GameRunner:
 
 
     def one_iter(self, args):
+        self.num_iter = self.num_iter+1;
+        if (self.num_iter % 100 == 0):
+            print(self.num_iter)
         arg_string = " ".join(args)
         # print(arg_string)
         # print('waiting for args')
@@ -42,9 +46,10 @@ class GameRunner:
 
     def __init__(self):
         self.spin_up()
+        self.num_iter = 0
 
     def run(self, weights, display=False):
-        args = [str(weights[i]) for i in range(0, 13)]
+        args = [str(weights[i]) for i in range(0, 11)]
         return self.one_iter(args)
 
     def stop(self):
@@ -52,7 +57,7 @@ class GameRunner:
 
     if __name__ == '__main__':
         # This list should be our weights
-        args = [str(0.01) for i in range(0, 13)]
+        args = [str(0.01) for i in range(0, 11)]
         run(args)
         # def mock_update_rule(args, result):
         #     return [arg for arg in args]
