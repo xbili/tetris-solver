@@ -20,14 +20,13 @@ class PSOLearner(object):
 
     def learn(self):
         # Lower bound
-        lb = [-100] * 2
+        lb = [-100] * 11
 
         # Upper bound
-        ub = [100] * 2
+        ub = [100] * 11
 
         xopt, fopt = pso(self.utility, lb, ub,
-                         swarmsize=100, omega=0.5,
-                         minstep=0.5, maxiter=10000, debug=True)
+                         maxiter=10000, debug=True)
 
         print(xopt)
         print(fopt)
