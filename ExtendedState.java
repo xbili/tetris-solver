@@ -82,7 +82,6 @@ public class ExtendedState extends State {
 
     // Make a move based on the move index - its order in the legalMoves list
     public void makeMove(int move) {
-      System.out.println("move" + Arrays.toString(this.legalMoves[nextPiece][move]));
         makeMove(legalMoves[nextPiece][move]);
     }
 
@@ -308,7 +307,6 @@ public class ExtendedState extends State {
         features.add((float)getMaximumColumnHeight());
         features.add((float)getNumberOfHoles());
 
-        System.out.println("feat" + Arrays.toString(features.toArray()));
 
         return features.stream().map(i -> (float)i).toArray(Float[]::new);
 
