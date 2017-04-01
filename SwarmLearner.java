@@ -13,8 +13,8 @@ public class SwarmLearner extends Learner {
     private static float WEIGHT_LOWER_BOUND = -30;
 
     // Bounds for randomized velocities
-    private static float VEL_UPPER_BOUND = 10;
-    private static float VEL_LOWER_BOUND = -10;
+    private static float VEL_UPPER_BOUND = 5;
+    private static float VEL_LOWER_BOUND = -5;
 
     // Bounds for velocity updates
     private static float C1 = (float) 1.49618;
