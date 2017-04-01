@@ -11,9 +11,9 @@ public class PlayerSkeleton {
     // Legal move, 2D array: [Orientation, Slot]
     public int pickMove(ExtendedState s, int[][] legalMoves) {
         Float[] weights = fakeWeights(ExtendedState.NUM_FEATURES);
-//        printArray(features);
         return pickMove(s, legalMoves, weights);
     }
+
     // Testing only.
     public Float[] fakeWeights(int numWeights) {
       Random rand = new Random();
@@ -34,7 +34,6 @@ public class PlayerSkeleton {
           maxUtil = currUtil;
         }
       }
-//      Log.debug("Making move: " + maxMove);
       return maxMove;
     }
 
@@ -47,19 +46,14 @@ public class PlayerSkeleton {
      * @return utility value obtained from the weights
      */
     private static Float getUtilityValue(Float[] weights, Float[] features) {
-        // Zero-th feature should be equal to 1
-        assert features[0] == 1.0f;
-
-        // Weights and features should have the same length
-        assert weights.length == features.length;
-
-        Float result = 0.0f;
-        for (int i = 0; i < weights.length; i++) {
-            result += weights[i] * features[i];
+        Float result = weights[0];
+        for (int i = 1; i < weights.length; i++) {
+            result += weights[i] * features[i-1];
         }
 
         return result;
     }
+
     public static void main(String[] args) {
         ExtendedState s = new ExtendedState();
         new TFrame(s);
@@ -74,8 +68,6 @@ public class PlayerSkeleton {
                 e.printStackTrace();
             }
         }
-
-//        System.out.println("You have completed "+s.getRowsCleared()+" rows.");
     }
 
 }

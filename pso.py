@@ -7,7 +7,7 @@ class PSOLearner(object):
     UPPER_BOUND = 10
     LOWER_BOUND = -10
     OMEGA = 0.75
-    SWARMSIZE = 500
+    SWARMSIZE = 5000
     MAX_ITER = 10000
     SHOW_DEBUG = False
 
@@ -32,10 +32,10 @@ class PSOLearner(object):
 
     def learn(self):
         # Lower bound
-        lb = [self.LOWER_BOUND] * 11
+        lb = [self.LOWER_BOUND] * 3
 
         # Upper bound
-        ub = [self.UPPER_BOUND] * 11
+        ub = [self.UPPER_BOUND] * 3
 
         xopt, fopt = pso(self.utility, lb, ub,
                          omega=self.OMEGA, swarmsize=self.SWARMSIZE,

@@ -6,7 +6,7 @@ import java.util.Arrays;
  */
 public class ExtendedState extends State {
 
-    public static final int NUM_FEATURES = 21;
+    public static final int NUM_FEATURES = 3;
 
     ExtendedState previousState = null;
     public boolean isCloned = false;
@@ -18,57 +18,57 @@ public class ExtendedState extends State {
      * @return a copy of ExtendedState.
      */
     public ExtendedState(State s) {
-      this.clonedTurn = s.getTurnNumber();
-      this.clonedCleared = s.getRowsCleared();
-      this.clonedField = get2dClone(s.getField(), ROWS);
-      this.clonedTop = s.getTop().clone();
-      this.isCloned = true;
-      this.nextPiece = s.getNextPiece();
+        this.clonedTurn = s.getTurnNumber();
+        this.clonedCleared = s.getRowsCleared();
+        this.clonedField = get2dClone(s.getField(), ROWS);
+        this.clonedTop = s.getTop().clone();
+        this.isCloned = true;
+        this.nextPiece = s.getNextPiece();
     }
     public ExtendedState() {
-      super();
+        super();
     }
     //the next several arrays define the piece vocabulary in detail
     //width of the pieces [piece ID][orientation]
     protected static int[][] pWidth = {
-            {2},
-            {1,4},
-            {2,3,2,3},
-            {2,3,2,3},
-            {2,3,2,3},
-            {3,2},
-            {3,2}
+        {2},
+        {1,4},
+        {2,3,2,3},
+        {2,3,2,3},
+        {2,3,2,3},
+        {3,2},
+        {3,2}
     };
 
     //height of the pieces [piece ID][orientation]
     private static int[][] pHeight = {
-            {2},
-            {4,1},
-            {3,2,3,2},
-            {3,2,3,2},
-            {3,2,3,2},
-            {2,3},
-            {2,3}
+        {2},
+        {4,1},
+        {3,2,3,2},
+        {3,2,3,2},
+        {3,2,3,2},
+        {2,3},
+        {2,3}
     };
 
     private static int[][][] pBottom = {
-            {{0,0}},
-            {{0},{0,0,0,0}},
-            {{0,0},{0,1,1},{2,0},{0,0,0}},
-            {{0,0},{0,0,0},{0,2},{1,1,0}},
-            {{0,1},{1,0,1},{1,0},{0,0,0}},
-            {{0,0,1},{1,0}},
-            {{1,0,0},{0,1}}
+        {{0,0}},
+        {{0},{0,0,0,0}},
+        {{0,0},{0,1,1},{2,0},{0,0,0}},
+        {{0,0},{0,0,0},{0,2},{1,1,0}},
+        {{0,1},{1,0,1},{1,0},{0,0,0}},
+        {{0,0,1},{1,0}},
+        {{1,0,0},{0,1}}
     };
 
     private static int[][][] pTop = {
-            {{2,2}},
-            {{4},{1,1,1,1}},
-            {{3,1},{2,2,2},{3,3},{1,1,2}},
-            {{1,3},{2,1,1},{3,3},{2,2,2}},
-            {{3,2},{2,2,2},{2,3},{1,2,1}},
-            {{1,2,2},{3,2}},
-            {{2,2,1},{2,3}}
+        {{2,2}},
+        {{4},{1,1,1,1}},
+        {{3,1},{2,2,2},{3,3},{1,1,2}},
+        {{1,3},{2,1,1},{3,3},{2,2,2}},
+        {{3,2},{2,2,2},{2,3},{1,2,1}},
+        {{1,2,2},{3,2}},
+        {{2,2,1},{2,3}}
     };
 
     private int randomPiece() {
@@ -162,11 +162,11 @@ public class ExtendedState extends State {
         }
     }
     public int[][] get2dClone(int[][] input, int num1dArrays) {
-      int [][] arrClone = new int[num1dArrays][];
-      for(int i = 0; i < num1dArrays; i++) {
-        arrClone[i] = input[i].clone();
-      }
-      return arrClone;
+        int [][] arrClone = new int[num1dArrays][];
+        for(int i = 0; i < num1dArrays; i++) {
+            arrClone[i] = input[i].clone();
+        }
+        return arrClone;
     }
 
     /**
@@ -295,20 +295,11 @@ public class ExtendedState extends State {
      * @return calculated features
      */
     public Float[] getFeatures() {
+        ArrayList<Float> features = new ArrayList<>(3);
 
-        ArrayList<Float> features = new ArrayList<>(11);
-        int[] heights = getColumnHeights();
-        for (int height : heights) {
-            features.add((float)height);
-        }
-            int[] adjColHiDiffs = getAdjacentColumnHeightAbsoluteDifferences();
-            for (int adjColHiDiff : adjColHiDiffs) {
-                features.add((float)adjColHiDiff);
-            }
         features.add((float)getMaximumColumnHeight());
-        features.add((float)getNumberOfHoles());
-//        features.add((float) getNumberOfHolesMade());
-//        features.add((float) getNumberOfLinesCleared());
+        features.add((float)getNumberOfHolesMade());
+        features.add((float)getNumberOfLinesCleared());
 
         return features.stream().map(i -> (float)i).toArray(Float[]::new);
 

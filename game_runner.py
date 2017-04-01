@@ -29,7 +29,7 @@ class GameRunner:
         return result
 
     def run(self, weights, display=False):
-        args = [str(weights[i]) for i in range(0, 11)]
+        args = [str(weights[i]) for i in range(0, 3)]
         return self.one_iter(args)
 
     def stop(self):

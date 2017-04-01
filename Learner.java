@@ -40,7 +40,7 @@ public abstract class Learner {
      *
      * @return number of blocks cleared by the agent
      */
-    protected int run(State state, float[] weights) {
+    protected int run(ExtendedState state, Float[] weights) {
         PlayerSkeleton player = new PlayerSkeleton();
 
         // Create new display frame only if display setting is true
