@@ -296,19 +296,19 @@ public class ExtendedState extends State {
      */
     public Float[] getFeatures() {
 
-        ArrayList<Float> features = new ArrayList<>(11);
-        int[] heights = getColumnHeights();
-        for (int height : heights) {
-            features.add((float)height);
+        ArrayList<Float> features = new ArrayList<>(13);
+        // int[] heights = getColumnHeights();
+        // for (int height : heights) {
+        //     features.add((float)height);
+        // }
+        int[] adjColHiDiffs = getAdjacentColumnHeightAbsoluteDifferences();
+        for (int adjColHiDiff : adjColHiDiffs) {
+            features.add((float)adjColHiDiff);
         }
-            int[] adjColHiDiffs = getAdjacentColumnHeightAbsoluteDifferences();
-            for (int adjColHiDiff : adjColHiDiffs) {
-                features.add((float)adjColHiDiff);
-            }
         features.add((float)getMaximumColumnHeight());
         features.add((float)getNumberOfHoles());
-//        features.add((float) getNumberOfHolesMade());
-//        features.add((float) getNumberOfLinesCleared());
+       features.add((float) getNumberOfHolesMade());
+       features.add((float) getNumberOfLinesCleared());
 
         return features.stream().map(i -> (float)i).toArray(Float[]::new);
 

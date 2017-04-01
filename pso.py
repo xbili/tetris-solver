@@ -22,13 +22,13 @@ class PSOLearner(object):
 
     def learn(self):
         # Lower bound
-        lb = [-100] * 11
+        lb = [-100] * 13
 
         # Upper bound
-        ub = [100] * 11
+        ub = [100] * 13
 
         xopt, fopt = pso(self.utility, lb, ub,
-                         maxiter=10000)
+                         minstep=10, maxiter=10000)
 
         print(xopt)
         print(fopt)

@@ -49,19 +49,8 @@ class GameRunner:
         self.num_iter = 0
 
     def run(self, weights, display=False):
-        args = [str(weights[i]) for i in range(0, 11)]
+        args = [str(weight) for weight in weights]
         return self.one_iter(args)
 
     def stop(self):
         Popen.send_signal(signal.SIGINT)
-
-    if __name__ == '__main__':
-        # This list should be our weights
-        args = [str(0.01) for i in range(0, 11)]
-        run(args)
-        # def mock_update_rule(args, result):
-        #     return [arg for arg in args]
-        #
-        # # Convert back to float
-        # result = [float(arg) for arg in run_game(10, args, mock_update_rule)]
-        # print(result)
