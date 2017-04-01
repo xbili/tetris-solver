@@ -14,6 +14,7 @@ public class PlayerSkeleton {
     }
 
     public int pickMove(State s, int[][] legalMoves, float[] weights) {
+        return 0;
     }
 
     /**
