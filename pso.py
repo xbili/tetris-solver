@@ -12,21 +12,23 @@ class PSOLearner(object):
         args = [str(arg) for arg in x]
 
         # Lines cleared
+        # print(args)
         cleared = self.runner.run(args)
         if int(float(cleared)) > self.min_cleared:
+            print(args)
             print(cleared)
 
         return -cleared
 
     def learn(self):
         # Lower bound
-        lb = [-100] * 11
+        lb = [-100] * 13
 
         # Upper bound
-        ub = [100] * 11
+        ub = [100] * 13
 
         xopt, fopt = pso(self.utility, lb, ub,
-                         maxiter=10000, debug=True)
+                         maxiter=10000)
 
         print(xopt)
         print(fopt)

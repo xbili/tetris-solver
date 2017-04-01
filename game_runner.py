@@ -44,7 +44,7 @@ class GameRunner:
         self.spin_up()
 
     def run(self, weights, display=False):
-        args = [str(weights[i]) for i in range(0, 2)]
+        args = [str(weights[i]) for i in range(0, 13)]
         return self.one_iter(args)
 
     def stop(self):
@@ -52,7 +52,7 @@ class GameRunner:
 
     if __name__ == '__main__':
         # This list should be our weights
-        args = [str(0.01) for i in range(0, 2)]
+        args = [str(0.01) for i in range(0, 13)]
         run(args)
         # def mock_update_rule(args, result):
         #     return [arg for arg in args]

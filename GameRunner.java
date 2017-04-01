@@ -9,7 +9,7 @@ public class GameRunner {
 
     private static boolean display = false;
     private static BufferedInputStream bis;
-
+    private static TFrame frame;
     /**
      * Runs the game using the specified weights.
      *
@@ -19,12 +19,19 @@ public class GameRunner {
         PlayerSkeleton player = new PlayerSkeleton();
 
         // Create new display frame only if display setting is true
-        if (display) new TFrame(state);
+        if (display)
+            frame = new TFrame(state);
 
         while(!state.hasLost()) {
             state.makeMove(player.pickMove(state, state.legalMoves(), weights));
             if (display) draw(state);
         }
+//        if (state.getRowsCleared() > 0) {
+//            frame = new TFrame(state);
+//            draw(state);
+//        }
+//        frame.setVisible(false);
+//        frame.dispose();
 
         return state.getRowsCleared();
     }
@@ -35,11 +42,11 @@ public class GameRunner {
     private static void draw(State state) {
         state.draw();
         state.drawNext(0, 0);
-        try {
-            Thread.sleep(300);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            Thread.sleep(300);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
     }
     private static void parseWeights(String arg) {
         String[] args = arg.split(" ");
