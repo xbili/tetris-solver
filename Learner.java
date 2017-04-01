@@ -12,9 +12,9 @@ public abstract class Learner {
      *
      * @return optimized weight after learning has taken place
      */
-    public int[] start(int[] initialWeights, int maxIterations) {
+    public float[] start(float[] initialWeights, int maxIterations) {
         int iterations = maxIterations;
-        int[] weights = initialWeights;
+        float[] weights = initialWeights;
         while (iterations > 0) {
             weights = learn(weights);
 
@@ -55,34 +55,11 @@ public abstract class Learner {
     }
 
     /**
-     * Calculates the utility value with the specified weights.
-     *
-     * NOTE: The first element of `features` need to be equal to 1 in order to
-     * take into account `w(0)` (the zero-th weight) for our utility function.
-     *
-     * @return utility value obtained from the weights
-     */
-    protected int getUtilityValue(float[] weights, int[] features) {
-        // Zero-th feature should be equal to 1
-        assert features[0] == 1;
-
-        // Weights and features should have the same length
-        assert weights.length == features.length;
-
-        int result = 0;
-        for (int i = 0; i < weights.length; i++) {
-            result += weights[i] * features[i];
-        }
-
-        return result;
-    }
-
-    /**
      * XLearner class should, and needs to override this method.
      *
      * @return updated weight after ONE iteration of the learning algorithm
      */
-    protected abstract int[] learn(int[] weights);
+    protected abstract float[] learn(float[] weights);
 
     /**
      * Draws updated state onto the TFrame
@@ -98,4 +75,3 @@ public abstract class Learner {
     }
 
 }
-
