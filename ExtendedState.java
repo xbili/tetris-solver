@@ -31,7 +31,7 @@ public class ExtendedState extends State {
     public int[] test(int move) {
         ExtendedState es = new ExtendedState(this);
         es.makeMove(move);
-        return s.getFeatures();
+        return es.getFeatures();
     }
 
     /**
