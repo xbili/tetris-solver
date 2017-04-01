@@ -2,20 +2,36 @@
  * State class with additional functionalities.
  */
 public class ExtendedState extends State {
+
+    public static final int NUM_FEATURES = 21;
+    private float[] features = new float[NUM_FEATURES];
+
     /**
      * @return a copy of ExtendedState.
      */
-    public ExtendedState clone() {
-        // TODO: Stubbed
-        return null;
+    public ExtendedState(State s) {
+      this.turn = s.getTurnNumber();
+      this.cleared = s.getRowsCleared();
+      this.field = get2dClone(s.getField(), State.ROWS);
+      this.top = s.getTop().clone();
+      this.nextPiece = s.getNextPiece();
+    }
+
+    public int[][] get2dClone(int[][] input, int num1dArrays) {
+      int [][] arrClone = new int[num1dArrays][];
+      for(int i = 0; i < num1dArrays; i++) {
+        arrClone[i] = this.field[i].clone();
+      }
+      return arrClone;
     }
 
     /**
      * @return extended state of what will happen if a certain move is made.
      */
-    public ExtendedState test(int move) {
-        // TODO: Stubbed
-        return null;
+    public int[] test(int move) {
+        ExtendedState es = new ExtendedState(this);
+        es.makeMove(move);
+        return s.getFeatures();
     }
 
     /**
@@ -53,10 +69,8 @@ public class ExtendedState extends State {
     /**
      * @return the feature array of the current state
      */
-    public int[] getFeatures() {
-        // TODO: Stubbed
-        return new int[10];
+    public float[] getFeatures() {
+        return features;
     }
 
 }
-
