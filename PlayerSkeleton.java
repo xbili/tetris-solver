@@ -211,7 +211,7 @@ public class PlayerSkeleton {
             }
         }
 
-        System.out.println("You have completed "+s.getRowsCleared()+" rows.");
+//        System.out.println("You have completed "+s.getRowsCleared()+" rows.");
     }
 
 }
