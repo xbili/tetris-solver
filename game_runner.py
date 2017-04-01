@@ -60,4 +60,3 @@ class GameRunner:
         # # Convert back to float
         # result = [float(arg) for arg in run_game(10, args, mock_update_rule)]
         # print(result)
->>>>>>> master

@@ -1,33 +1,36 @@
 from pyswarm import pso
-from game_runner import one_iter
+from game_runner import GameRunner
 
-# x is a vector of features
-def utility(x):
-    # Convert all arguments to string
-    args = [str(arg) for arg in x]
+class PSOLearner(object):
 
-    # Lines cleared
-    cleared = one_iter(args)
-    print('Lines cleared: {}'.format(cleared))
+    runner = GameRunner()
+    min_cleared = 0
 
-    return cleared
+    # x is a vector of features
+    def utility(self, x):
+        # Convert all arguments to string
+        args = [str(arg) for arg in x]
 
-def con(x):
-    x1 = x[0]
-    x2 = x[1]
-    return [-(x1 + 0.25)**2 + 0.75*x2]
+        # Lines cleared
+        cleared = self.runner.run(args)
+        if int(float(cleared)) > self.min_cleared:
+            print(cleared)
 
-def main():
-    # Lower bound
-    lb = [-100] * 21
+        return cleared
 
-    # Upper bound
-    ub = [100] * 21
+    def learn(self):
+        # Lower bound
+        lb = [-100] * 21
 
-    xopt, fopt = pso(utility, lb, ub, f_ieqcons=con)
+        # Upper bound
+        ub = [100] * 21
 
-    print(xopt)
-    print(fopt)
+        xopt, fopt = pso(self.utility, lb, ub, maxiter=10000)
+
+        print(xopt)
+        print(fopt)
 
 if __name__ == '__main__':
-    main()
+    learner = PSOLearner()
+    learner.learn()
+
