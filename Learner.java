@@ -40,11 +40,11 @@ public abstract class Learner {
      *
      * @return number of blocks cleared by the agent
      */
-    protected int run(State state, float[] weights) {
+    protected int run(ExtendedState state, Float[] weights) {
         PlayerSkeleton player = new PlayerSkeleton();
 
         // Create new display frame only if display setting is true
-        if (display) new TFrame(state);
+//        if (display) new TFrame(state);
 
         while(!state.hasLost()) {
             state.makeMove(player.pickMove(state, state.legalMoves(), weights));
@@ -64,9 +64,9 @@ public abstract class Learner {
     /**
      * Draws updated state onto the TFrame
      */
-    private void draw(State state) {
-        state.draw();
-        state.drawNext(0, 0);
+    private void draw(ExtendedState state) {
+//        state.draw();
+//        state.drawNext(0, 0);
         try {
             Thread.sleep(300);
         } catch (InterruptedException e) {
