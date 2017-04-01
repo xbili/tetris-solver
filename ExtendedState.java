@@ -301,7 +301,6 @@ public class ExtendedState extends State {
         features.add((float)getNumberOfHolesMade());
         features.add((float)getNumberOfLinesCleared());
 
-        return features.stream().map(i -> (float)i).toArray(Float[]::new);
-
+        return features.toArray(new Float[3]);
     }
 }

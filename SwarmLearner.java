@@ -5,7 +5,7 @@ import java.util.Arrays;
 public class SwarmLearner extends Learner {
 
     private static int SWARM_SIZE = 100;
-    private static int MAX_ITERATION = 10000;
+    private static int MAX_ITERATION = Integer.MAX_VALUE;
     private static int FEATURES = 3;
 
     // Bounds for randomized weight
@@ -13,8 +13,8 @@ public class SwarmLearner extends Learner {
     private static float WEIGHT_LOWER_BOUND = -30;
 
     // Bounds for randomized velocities
-    private static float VEL_UPPER_BOUND = 5;
-    private static float VEL_LOWER_BOUND = -5;
+    private static float VEL_UPPER_BOUND = 10;
+    private static float VEL_LOWER_BOUND = -10;
 
     // Bounds for velocity updates
     private static float C1 = (float) 1.49618;
@@ -95,7 +95,7 @@ public class SwarmLearner extends Learner {
             while(iter < MAX_ITERATION) {
                 // Update personal best
                 for (int i = 0; i < SWARM_SIZE; i++) {
-                    if (fitnessValueList[i] < pBest[i]) {
+                    if (fitnessValueList[i] > pBest[i]) {
                         pBest[i] = fitnessValueList[i];
                         pBestWeights.set(i, swarm.get(i).getWeights());
                     }
