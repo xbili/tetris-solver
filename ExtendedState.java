@@ -25,7 +25,9 @@ public class ExtendedState extends State {
       this.clonedTop = s.getTop().clone();
       this.isCloned = true;
       this.nextPiece = s.getNextPiece();
-
+    }
+    public ExtendedState() {
+      super();
     }
     //the next several arrays define the piece vocabulary in detail
     //width of the pieces [piece ID][orientation]
@@ -140,13 +142,13 @@ public class ExtendedState extends State {
 
             return true;
         } else {
-            super.makeMove(orient, slot);
+            return super.makeMove(orient, slot);
         }
     }
     public int[][] get2dClone(int[][] input, int num1dArrays) {
       int [][] arrClone = new int[num1dArrays][];
       for(int i = 0; i < num1dArrays; i++) {
-        arrClone[i] = this.clonedField[i].clone();
+        arrClone[i] = input[i].clone();
       }
       return arrClone;
     }
@@ -158,7 +160,6 @@ public class ExtendedState extends State {
         ExtendedState es = new ExtendedState(this);
         es.makeMove(move);
         return getFeatures();
-
     }
 
     /**
@@ -259,7 +260,6 @@ public class ExtendedState extends State {
      * Feature 23: Number of holes created in last step
      * @return number of holes made
      */
-
     private int getNumberOfHolesMade() {
         int lastNumHoles = this.previousState.getNumberOfHoles();
         int numHoles = getNumberOfHoles();

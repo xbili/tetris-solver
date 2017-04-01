@@ -5,6 +5,7 @@ import java.util.Collections;
 public class PlayerSkeleton {
     private static final int ROWS = 21;
     private static final int COLS = 10;
+
     // Implement this function to have a working system
     // Legal move, 2D array: [Orientation, Slot]
     public int pickMove(ExtendedState s, int[][] legalMoves) {
@@ -13,9 +14,17 @@ public class PlayerSkeleton {
         return 0;
     }
 
-    public int pickMove(ExtendedState s, int[][] legalMoves, float[] weights) {
-
-        return 0;
+    public int pickMove(ExtendedState s, int[][] legalMoves, Float[] weights) {
+      Float maxUtil = 0.0f;
+      int maxMove = 0;
+      for (int i=0; i<legalMoves.length; i++) {
+        Float currUtil = getUtilityValue(weights, s.test(i));
+        if (maxUtil < currUtil) {
+          maxMove = i;
+          maxUtil = currUtil;
+        }
+      }
+      return maxMove;
     }
 
 
@@ -42,14 +51,14 @@ public class PlayerSkeleton {
      *
      * @return utility value obtained from the weights
      */
-    private static int getUtilityValue(int[] weights, int[] features) {
+    private static Float getUtilityValue(Float[] weights, Float[] features) {
         // Zero-th feature should be equal to 1
-        assert features[0] == 1;
+        assert features[0] == 1.0f;
 
         // Weights and features should have the same length
         assert weights.length == features.length;
 
-        int result = 0;
+        Float result = 0.0f;
         for (int i = 0; i < weights.length; i++) {
             result += weights[i] * features[i];
         }
@@ -57,12 +66,10 @@ public class PlayerSkeleton {
         return result;
     }
     public static void main(String[] args) {
-        State s = new State();
-        State previousState;
+        ExtendedState s = new ExtendedState();
         new TFrame(s);
         PlayerSkeleton p = new PlayerSkeleton();
         while(!s.hasLost()) {
-            previousState = s;
             s.makeMove(p.pickMove(s,s.legalMoves()));
             s.draw();
             s.drawNext(0,0);
@@ -77,4 +84,3 @@ public class PlayerSkeleton {
     }
 
 }
-
