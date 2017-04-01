@@ -75,6 +75,10 @@ public class ExtendedState extends State {
         return (int)(Math.random()*N_PIECES);
     }
 
+    public int[][] getField() {
+        return isCloned ? clonedField : super.getField();
+    }
+
 
     // Make a move based on the move index - its order in the legalMoves list
     public void makeMove(int move) {
