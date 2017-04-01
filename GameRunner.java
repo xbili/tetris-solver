@@ -3,14 +3,14 @@
  */
 public class GameRunner {
 
-    private static boolean display = false;
+    private static boolean display = true;
 
     /**
      * Runs the game using the specified weights.
      *
      * @return number of blocks cleared by the agent
      */
-    private static float run(State state, float[] weights) {
+    private static int run(State state, float[] weights) {
         PlayerSkeleton player = new PlayerSkeleton();
 
         // Create new display frame only if display setting is true
@@ -42,8 +42,8 @@ public class GameRunner {
         for(int i = 0; i < args.length; i++) {
             weights[i] = Float.parseFloat(args[i]);
         }
-        float result = run(new State(), weights);
-        System.out.printf("%0.2f\n", result);
+        int result = run(new State(), weights);
+        System.out.printf("%d\n", result);
     }
 }
 
