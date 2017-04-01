@@ -16,16 +16,18 @@ class PSOLearner(object):
         if int(float(cleared)) > self.min_cleared:
             print(cleared)
 
-        return cleared
+        return -cleared
 
     def learn(self):
         # Lower bound
-        lb = [-100] * 21
+        lb = [-100] * 2
 
         # Upper bound
-        ub = [100] * 21
+        ub = [100] * 2
 
-        xopt, fopt = pso(self.utility, lb, ub, maxiter=10000)
+        xopt, fopt = pso(self.utility, lb, ub,
+                         swarmsize=100, omega=0.5,
+                         minstep=0.5, maxiter=10000, debug=True)
 
         print(xopt)
         print(fopt)
