@@ -1,3 +1,4 @@
+import sys
 from pyswarm import pso
 from game_runner import GameRunner
 
@@ -28,10 +29,11 @@ class PSOLearner(object):
         ub = [100] * 13
 
         xopt, fopt = pso(self.utility, lb, ub,
-                         minstep=10, maxiter=10000)
+                         minstep=10, maxiter=sys.maxsize)
 
-        print(xopt)
-        print(fopt)
+        f = open('result_pso.txt', 'w')
+        f.write(str(xopt) + ' ' + str(fopt)+"\n")
+        f.close()
 
 if __name__ == '__main__':
     learner = PSOLearner()
