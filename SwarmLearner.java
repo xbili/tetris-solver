@@ -5,22 +5,25 @@ import java.util.Arrays;
 public class SwarmLearner extends Learner {
 
     private static int SWARM_SIZE = 100;
-    private static int MAX_ITERATION = Integer.MAX_VALUE;
-    private static int FEATURES = 3;
+    private static final int MAX_ITERATION = Integer.MAX_VALUE;
+    private static final int FEATURES = 3;
 
     // Bounds for randomized weight
-    private static float WEIGHT_UPPER_BOUND = 30;
-    private static float WEIGHT_LOWER_BOUND = -30;
+    private static final float WEIGHT_UPPER_BOUND = 10;
+    private static final float WEIGHT_LOWER_BOUND = -10;
 
     // Bounds for randomized velocities
-    private static float VEL_UPPER_BOUND = 5;
-    private static float VEL_LOWER_BOUND = -5;
+    private static float VEL_UPPER_BOUND = (float) 0.5;
+    private static float VEL_LOWER_BOUND = (float) -0.5;
 
     // Bounds for velocity updates
-    private static float C1 = (float) 1.49618;
-    private static float C2 = (float) 1.49618;
-    private static float W_UPPER_BOUND = 1;
-    private static float W_LOWER_BOUND = 0;
+    private static final float C1 = (float) 1.49618;
+    private static final float C2 = (float) 1.49618;
+    private static final float W_UPPER_BOUND = 1;
+    private static final float W_LOWER_BOUND = 0;
+
+    // Times to run the game for each particle
+    private static final int GAME_RUNS = 10;
 
     // Tolerance for error
     private static float ERR_TOLERANCE = (float)1E-20;
@@ -38,20 +41,28 @@ public class SwarmLearner extends Learner {
     }
 
     private static float evaluate(float[] weights) {
-        ExtendedState state = new ExtendedState();
-        PlayerSkeleton player = new PlayerSkeleton();
+        float sum = 0;
+        int count = GAME_RUNS;
+        while (count > 0) {
+            ExtendedState state = new ExtendedState();
+            PlayerSkeleton player = new PlayerSkeleton();
 
-        // This is a hack because of Float vs float.
-        Float[] actualWeights = new Float[weights.length];
-        for (int i = 0; i < actualWeights.length; i++) {
-            actualWeights[i] = weights[i];
+            // This is a hack because of Float vs float.
+            Float[] actualWeights = new Float[weights.length];
+            for (int i = 0; i < actualWeights.length; i++) {
+                actualWeights[i] = weights[i];
+            }
+
+            while(!state.hasLost()) {
+                state.makeMove(player.pickMove(state, state.legalMoves(), actualWeights));
+            }
+
+            sum += state.getRowsCleared();
+
+            count--;
         }
 
-        while(!state.hasLost()) {
-            state.makeMove(player.pickMove(state, state.legalMoves(), actualWeights));
-        }
-
-        return state.getRowsCleared();
+        return sum / 10;
     }
 
     /**
@@ -77,10 +88,24 @@ public class SwarmLearner extends Learner {
         // List of all fitness values
         private float[] fitnessValueList = new float[SWARM_SIZE];
 
+        private float[] previousBest = new float[FEATURES + 1];
+
         // Random number generator for initial positions
         Random generator = new Random();
 
         public void execute() {
+            // Log run parameters
+            System.out.println("Swarm size: " + SWARM_SIZE);
+            System.out.println("Weight upper bound: " + WEIGHT_UPPER_BOUND);
+            System.out.println("Weight lower bound: " + WEIGHT_LOWER_BOUND);
+            System.out.println("Velocity upper bound: " + VEL_UPPER_BOUND);
+            System.out.println("Velocity lower bound: " + VEL_LOWER_BOUND);
+
+            System.out.println("C1: " + C1);
+            System.out.println("C2: " + C2);
+            System.out.println("w upper bound: " + W_UPPER_BOUND);
+            System.out.println("w lower bound: " + W_LOWER_BOUND);
+
             initializeSwarm();
             updateFitnessList();
 
@@ -109,7 +134,7 @@ public class SwarmLearner extends Learner {
                 }
 
                 // Update velocity for each particle
-                float w = (float) 0.729844;
+                float w = generateRandomFloat(W_LOWER_BOUND, W_UPPER_BOUND);
 
                 for (int i = 0; i < SWARM_SIZE; i++) {
                     Particle p = swarm.get(i);

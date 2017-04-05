@@ -290,16 +290,37 @@ public class ExtendedState extends State {
         return getRowsCleared() - this.previousState.getRowsCleared();
     }
 
+    private float getCompactness() {
+        float weight = 1;
+        float sum = 0;
+
+        for (int i = 0; i < ROWS; i++) {
+            for (int j = 0; j < COLS; j++) {
+                if (getField()[i][j] != 0) {
+                    sum += weight;
+                }
+            }
+            weight *= 0.5;
+        }
+
+        return sum;
+    }
+
     /**
      * Calculated feature
      * @return calculated features
      */
     public Float[] getFeatures() {
+        boolean display = false;
         ArrayList<Float> features = new ArrayList<>(3);
 
-        features.add((float)getMaximumColumnHeight());
-        features.add((float)getNumberOfHolesMade());
-        features.add((float)getNumberOfLinesCleared());
+        float holesMade = (float) getNumberOfHolesMade();
+        float maxColumnHeight = (float) getMaximumColumnHeight();
+        float compactness = getCompactness();
+
+        features.add(holesMade);
+        features.add(maxColumnHeight);
+        features.add(compactness);
 
         return features.toArray(new Float[3]);
     }
