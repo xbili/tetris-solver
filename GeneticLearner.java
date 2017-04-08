@@ -45,7 +45,7 @@ public class GeneticLearner extends Learner {
   }
 
   public static void main(String[] args) {
-    int nPopulation=100, nIterations=200;
+    int nPopulation=100, nIterations=2000;
     Float maxWeightValue=50.0f, minWeightValue=-50.0f;
     int nWeights = ExtendedState.NUM_FEATURES;
 

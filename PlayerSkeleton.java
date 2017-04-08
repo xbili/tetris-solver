@@ -10,7 +10,8 @@ public class PlayerSkeleton {
     // Implement this function to have a working system
     // Legal move, 2D array: [Orientation, Slot]
     public int pickMove(ExtendedState s, int[][] legalMoves) {
-        Float[] weights = fakeWeights(ExtendedState.NUM_FEATURES);
+        // Float[] weights = fakeWeights(ExtendedState.NUM_FEATURES);
+        Float[] weights = fixedWeights();
         return pickMove(s, legalMoves, weights);
     }
     // Testing only.
@@ -21,6 +22,15 @@ public class PlayerSkeleton {
         arr[i] = rand.nextFloat() * numWeights;
       }
       return arr;
+    }
+    public Float[] fixedWeights() {
+      float[] learnt = new float[] {-15.353264f, -23.422897f, -27.359068f, -37.603813f, -4.7835426f, -38.916718f, -1.2364388f, -10.347687f, -39.305233f, 41.935448f, -21.864826f, -21.664375f, -15.289585f, -21.748257f, -17.72837f, -29.211473f, -17.51176f, -32.001263f, 1.5772476f, 37.67379f, -8.539192f};
+      assert learnt.length==ExtendedState.NUM_FEATURES;
+      Float[] res = new Float[learnt.length];
+      for (int i=0; i<learnt.length; i++) {
+        res[i] = learnt[i];
+      }
+      return res;
     }
 
     public int pickMove(ExtendedState s, int[][] legalMoves, Float[] weights) {
@@ -73,7 +83,7 @@ public class PlayerSkeleton {
             }
         }
 
-//        System.out.println("You have completed "+s.getRowsCleared()+" rows.");
+       System.out.println("You have completed "+s.getRowsCleared()+" rows.");
     }
 
 }
