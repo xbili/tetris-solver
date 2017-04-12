@@ -4,7 +4,7 @@ import java.util.Arrays;
 
 public class SwarmLearner {
 
-    private static int SWARM_SIZE = 200;
+    private static int SWARM_SIZE = 1000;
     private static final int MAX_ITERATION = Integer.MAX_VALUE;
     private static final int FEATURES = 5;
 
@@ -23,7 +23,7 @@ public class SwarmLearner {
     private static final double W_LOWER_BOUND = 0;
 
     // Times to run the game for each particle
-    private static final int GAME_RUNS = 5;
+    private static final int GAME_RUNS = 1;
 
     // Tolerance for error
     private static double ERR_TOLERANCE = 1E-20;
@@ -126,7 +126,7 @@ public class SwarmLearner {
 
                     gBest = fitnessValueList[bestParticleIndex];
                     gBestWeights = Arrays.copyOf(
-                        swarm.get(bestParticleIndex).getWeights(), 
+                        swarm.get(bestParticleIndex).getWeights(),
                         swarm.get(bestParticleIndex).getWeights().length
                     );
                 }
