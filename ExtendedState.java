@@ -172,7 +172,7 @@ public class ExtendedState extends State {
     /**
      * @return extended state of what will happen if a certain move is made.
      */
-    public Float[] test(int move) {
+    public double[] test(int move) {
         ExtendedState es = new ExtendedState(this);
         es.makeMove(move);
         return es.getFeatures();
@@ -209,6 +209,16 @@ public class ExtendedState extends State {
             adjacentColumnHeightAbsoluteDifferences[col] = Math.abs(heights[col]-heights[col+1]);
         }
         return adjacentColumnHeightAbsoluteDifferences;
+    }
+
+    private int getAggregateHeight() {
+        int[] heights = getColumnHeights();
+        int sum = 0;
+        for (int i = 0; i < heights.length; i++) {
+            sum += heights[i];
+        }
+
+        return sum;
     }
 
     /**
@@ -290,9 +300,9 @@ public class ExtendedState extends State {
         return getRowsCleared() - this.previousState.getRowsCleared();
     }
 
-    private float getCompactness() {
-        float weight = 1;
-        float sum = 0;
+    private double getCompactness() {
+        double weight = 1;
+        double sum = 0;
 
         for (int i = 0; i < ROWS; i++) {
             for (int j = 0; j < COLS; j++) {
@@ -310,18 +320,15 @@ public class ExtendedState extends State {
      * Calculated feature
      * @return calculated features
      */
-    public Float[] getFeatures() {
-        boolean display = false;
-        ArrayList<Float> features = new ArrayList<>(3);
+    public double[] getFeatures() {
+        double holesMade = getNumberOfHolesMade();
+        double aggregateHeight = getAggregateHeight();
+        double compactness = getCompactness();
+        double linesCleared = getNumberOfLinesCleared();
+        double bumpiness = getBumpiness();
 
-        float holesMade = (float) getNumberOfHolesMade();
-        float maxColumnHeight = (float) getMaximumColumnHeight();
-        float compactness = getCompactness();
+        double[] features = { holesMade, aggregateHeight, compactness, linesCleared, bumpiness };
 
-        features.add(holesMade);
-        features.add(maxColumnHeight);
-        features.add(compactness);
-
-        return features.toArray(new Float[3]);
+        return features;
     }
 }

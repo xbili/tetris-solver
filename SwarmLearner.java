@@ -2,37 +2,31 @@ import java.util.Vector;
 import java.util.Random;
 import java.util.Arrays;
 
-public class SwarmLearner extends Learner {
+public class SwarmLearner {
 
-    private static int SWARM_SIZE = 100;
+    private static int SWARM_SIZE = 200;
     private static final int MAX_ITERATION = Integer.MAX_VALUE;
-    private static final int FEATURES = 3;
+    private static final int FEATURES = 5;
 
     // Bounds for randomized weight
-    private static final float WEIGHT_UPPER_BOUND = 10;
-    private static final float WEIGHT_LOWER_BOUND = -10;
+    private static final double WEIGHT_UPPER_BOUND = 1;
+    private static final double WEIGHT_LOWER_BOUND = -1;
 
     // Bounds for randomized velocities
-    private static float VEL_UPPER_BOUND = (float) 0.5;
-    private static float VEL_LOWER_BOUND = (float) -0.5;
+    private static double VEL_UPPER_BOUND = 2;
+    private static double VEL_LOWER_BOUND = -2;
 
     // Bounds for velocity updates
-    private static final float C1 = (float) 1.49618;
-    private static final float C2 = (float) 1.49618;
-    private static final float W_UPPER_BOUND = 1;
-    private static final float W_LOWER_BOUND = 0;
+    private static final double C1 = 1.49618;
+    private static final double C2 = 1.49618;
+    private static final double W_UPPER_BOUND = 1;
+    private static final double W_LOWER_BOUND = 0;
 
     // Times to run the game for each particle
-    private static final int GAME_RUNS = 10;
+    private static final int GAME_RUNS = 5;
 
     // Tolerance for error
-    private static float ERR_TOLERANCE = (float)1E-20;
-
-    @Override
-    protected float[] learn(float[] weights) {
-        // TODO: Stubbed
-        return new float[10];
-    }
+    private static double ERR_TOLERANCE = 1E-20;
 
     // Test method to run the learner
     public static void main(String[] args) {
@@ -40,21 +34,15 @@ public class SwarmLearner extends Learner {
         pso.execute();
     }
 
-    private static float evaluate(float[] weights) {
-        float sum = 0;
+    private static double evaluate(double[] weights) {
+        double sum = 0;
         int count = GAME_RUNS;
         while (count > 0) {
             ExtendedState state = new ExtendedState();
             PlayerSkeleton player = new PlayerSkeleton();
 
-            // This is a hack because of Float vs float.
-            Float[] actualWeights = new Float[weights.length];
-            for (int i = 0; i < actualWeights.length; i++) {
-                actualWeights[i] = weights[i];
-            }
-
             while(!state.hasLost()) {
-                state.makeMove(player.pickMove(state, state.legalMoves(), actualWeights));
+                state.makeMove(player.pickMove(state, state.legalMoves(), weights));
             }
 
             sum += state.getRowsCleared();
@@ -62,7 +50,7 @@ public class SwarmLearner extends Learner {
             count--;
         }
 
-        return sum / 10;
+        return sum / GAME_RUNS;
     }
 
     /**
@@ -74,21 +62,21 @@ public class SwarmLearner extends Learner {
         private Vector<Particle> swarm = new Vector<Particle>();
 
         // Personal best fitness value
-        private float[] pBest = new float[SWARM_SIZE];
+        private double[] pBest = new double[SWARM_SIZE];
 
         // Personal best weight values
-        private Vector<float[]> pBestWeights = new Vector<float[]>();
+        private Vector<double[]> pBestWeights = new Vector<double[]>();
 
         // Global best fitness value
-        private float gBest;
+        private double gBest;
 
         // Global best weight values
-        private float[] gBestWeights;
+        private double[] gBestWeights;
 
         // List of all fitness values
-        private float[] fitnessValueList = new float[SWARM_SIZE];
+        private double[] fitnessValueList = new double[SWARM_SIZE];
 
-        private float[] previousBest = new float[FEATURES + 1];
+        private double[] previousBest = new double[FEATURES + 1];
 
         // Random number generator for initial positions
         Random generator = new Random();
@@ -116,35 +104,45 @@ public class SwarmLearner extends Learner {
 
             // Main execution loop
             int iter = 0;
-            float err = Float.MAX_VALUE;
             while(iter < MAX_ITERATION) {
                 // Update personal best
                 for (int i = 0; i < SWARM_SIZE; i++) {
                     if (fitnessValueList[i] > pBest[i]) {
                         pBest[i] = fitnessValueList[i];
-                        pBestWeights.set(i, swarm.get(i).getWeights());
+                        pBestWeights.set(
+                            i, Arrays.copyOf(
+                                swarm.get(i).getWeights(),
+                                swarm.get(i).getWeights().length
+                            )
+                        );
                     }
                 }
 
                 // Update global best
                 int bestParticleIndex = getMaxParticleIndex();
                 if (iter == 0 || fitnessValueList[bestParticleIndex] > gBest) {
+                    System.out.println("New best fitness found: " + fitnessValueList[bestParticleIndex]);
+                    System.out.println("Current gBest: " + gBest);
+
                     gBest = fitnessValueList[bestParticleIndex];
-                    gBestWeights = swarm.get(bestParticleIndex).getWeights();
+                    gBestWeights = Arrays.copyOf(
+                        swarm.get(bestParticleIndex).getWeights(), 
+                        swarm.get(bestParticleIndex).getWeights().length
+                    );
                 }
 
                 // Update velocity for each particle
-                float w = generateRandomFloat(W_LOWER_BOUND, W_UPPER_BOUND);
+                double w = generateRandomDouble(W_LOWER_BOUND, W_UPPER_BOUND);
 
                 for (int i = 0; i < SWARM_SIZE; i++) {
                     Particle p = swarm.get(i);
 
                     // Generate random updates
-                    float r1 = generator.nextFloat();
-                    float r2 = generator.nextFloat();
+                    double r1 = generator.nextDouble();
+                    double r2 = generator.nextDouble();
 
                     // Update velocities for each set of weights
-                    float[] velocities = p.getVelocities();
+                    double[] velocities = p.getVelocities();
                     for (int j = 0; j < velocities.length; j++) {
                         velocities[j] =  (w * velocities[j]) +
                             (r1 * C1) * (pBestWeights.get(i)[j] - p.getWeights()[j]) +
@@ -153,15 +151,12 @@ public class SwarmLearner extends Learner {
                     p.setVelocities(velocities);
 
                     // Update weights
-                    float[] weights = p.getWeights();
+                    double[] weights = p.getWeights();
                     for (int j = 0; j < weights.length; j++) {
                         weights[j] = weights[j] + velocities[j];
                     }
                     p.setWeights(weights);
                 }
-
-                // Evaluate with global best weights
-                err = evaluate(gBestWeights);
 
                 // Update iteration count
                 iter++;
@@ -197,16 +192,16 @@ public class SwarmLearner extends Learner {
                 p = new Particle();
 
                 // Randomize weights
-                float[] weights = new float[FEATURES + 1];
+                double[] weights = new double[FEATURES + 1];
                 for (int j = 0; j < FEATURES + 1; j++) {
-                    weights[j] = generateRandomFloat(
+                    weights[j] = generateRandomDouble(
                             WEIGHT_LOWER_BOUND, WEIGHT_UPPER_BOUND);
                 }
 
                 // Randomize velocities
-                float[] velocities = new float[FEATURES + 1];
+                double[] velocities = new double[FEATURES + 1];
                 for (int j = 0; j < FEATURES + 1; j++) {
-                    velocities[j] = generateRandomFloat(
+                    velocities[j] = generateRandomDouble(
                             VEL_LOWER_BOUND, VEL_UPPER_BOUND);
                 }
 
@@ -225,16 +220,17 @@ public class SwarmLearner extends Learner {
             }
         }
 
-        private float generateRandomFloat(float lower, float upper) {
-            return lower + generator.nextFloat() * (upper - lower);
+        private double generateRandomDouble(double lower, double upper) {
+            return lower + generator.nextDouble() * (upper - lower);
         }
 
         private int getMaxParticleIndex() {
             int result = 0;
-            float currFitness = fitnessValueList[0];
+            double currFitness = fitnessValueList[0];
             for (int i = 1; i < fitnessValueList.length; i++) {
                 if (fitnessValueList[i] > currFitness) {
                     result = i;
+                    currFitness = result;
                 }
             }
 
@@ -248,39 +244,39 @@ public class SwarmLearner extends Learner {
      */
     private static class Particle {
 
-        private float fitnessValue;
-        private float[] velocities;
-        private float[] weights;
+        private double fitnessValue;
+        private double[] velocities;
+        private double[] weights;
 
         public Particle() {
             super();
         }
 
-        public Particle(float fitnessValue, float[] velocities, float[] weights) {
+        public Particle(double fitnessValue, double[] velocities, double[] weights) {
             super();
             this.fitnessValue = fitnessValue;
             this.velocities = velocities;
             this.weights = weights;
         }
 
-        public float[] getVelocities() {
+        public double[] getVelocities() {
             return velocities;
         }
 
-        public void setVelocities(float[] velocities) {
+        public void setVelocities(double[] velocities) {
             this.velocities = velocities;
         }
 
-        public float[] getWeights() {
+        public double[] getWeights() {
             return weights;
         }
 
-        public void setWeights(float[] weights) {
+        public void setWeights(double[] weights) {
             assert this.weights.length == weights.length;
             this.weights = weights;
         }
 
-        public float getFitnessValue() {
+        public double getFitnessValue() {
             return evaluate(getWeights());
         }
 

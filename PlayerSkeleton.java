@@ -10,31 +10,21 @@ public class PlayerSkeleton {
     // Implement this function to have a working system
     // Legal move, 2D array: [Orientation, Slot]
     public int pickMove(ExtendedState s, int[][] legalMoves) {
-        Float[] weights = fakeWeights(ExtendedState.NUM_FEATURES);
+        double[] weights = { -2.475374129358239, -0.0017855641093171282, -0.5717679188666376, 4.581707413540975, 2.357230362294515, -0.10865658976791168 };
         return pickMove(s, legalMoves, weights);
     }
 
-    // Testing only.
-    public Float[] fakeWeights(int numWeights) {
-      Random rand = new Random();
-      Float[] arr = new Float[numWeights];
-      for (int i=0; i<numWeights; i++) {
-        arr[i] = rand.nextFloat() * numWeights;
-      }
-      return arr;
-    }
-
-    public int pickMove(ExtendedState s, int[][] legalMoves, Float[] weights) {
-      Float maxUtil = 0.0f;
-      int maxMove = 0;
-      for (int i=0; i<legalMoves.length; i++) {
-        Float currUtil = getUtilityValue(weights, s.test(i));
-        if (maxUtil < currUtil) {
-          maxMove = i;
-          maxUtil = currUtil;
+    public int pickMove(ExtendedState s, int[][] legalMoves, double[] weights) {
+        double maxUtil = Double.MIN_VALUE;
+        int maxMove = 0;
+        for (int i = 0; i < legalMoves.length; i++) {
+            double currUtil = getUtilityValue(weights, s.test(i));
+            if (currUtil > maxUtil) {
+                maxMove = i;
+                maxUtil = currUtil;
+            }
         }
-      }
-      return maxMove;
+        return maxMove;
     }
 
     /**
@@ -45,8 +35,8 @@ public class PlayerSkeleton {
      *
      * @return utility value obtained from the weights
      */
-    private static Float getUtilityValue(Float[] weights, Float[] features) {
-        Float result = weights[0];
+    private static double getUtilityValue(double[] weights, double[] features) {
+        double result = weights[0];
         for (int i = 1; i < weights.length; i++) {
             result += weights[i] * features[i-1];
         }
@@ -60,14 +50,16 @@ public class PlayerSkeleton {
         PlayerSkeleton p = new PlayerSkeleton();
         while(!s.hasLost()) {
             s.makeMove(p.pickMove(s,s.legalMoves()));
-            s.draw();
-            s.drawNext(0,0);
             try {
-                Thread.sleep(300);
+                Thread.sleep(500);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+            s.draw();
+            s.drawNext(0,0);
         }
+
+        System.out.println("Lines cleared: " + s.getRowsCleared());
     }
 
 }
