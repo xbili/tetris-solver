@@ -7,17 +7,18 @@ import java.lang.Math;
     http://stackoverflow.com/questions/1575061/ga-written-in-java */
 
 public class GeneticLearner extends Learner {
+  private static final int NUM_RUNS = 5;
   private Population pop;
 
-  public GeneticLearner(int popSize, int numWeights, Float maxWeightValue, Float minWeightValue) {
+  public GeneticLearner(int popSize, int numWeights, double maxWeightValue, double minWeightValue) {
     Individual.setDefaultValues(numWeights, maxWeightValue, minWeightValue);
     pop = new Population(popSize, true);
   }
 
   // TODO:: initialWeights does not apply for GA.
   @Override
-  public Float[] start(Float[] initialWeights, int iterations) {
-    Float[] res = new Float[0];
+  public double[] start(double[] initialWeights, int iterations) {
+    double[] res = new double[0];
     for (int i=0; i<iterations; i++) {
       res = learn(initialWeights);
       System.out.println("Fitness: " + pop.getFittest().getFitnessValue());
@@ -28,30 +29,29 @@ public class GeneticLearner extends Learner {
   }
 
   // TODO: weights[] does not apply
-  protected Float[] learn(Float[] weights) {
+  protected double[] learn(double[] weights) {
     // Play a game with each Individual and update its fitness value
     for(int i=0; i<this.pop.getSize(); i++) {
       // TODO: Test whether playing multiple games and taking average/minimum matters
-      int currFitness = 0;
-      for (int j=0; j<3; j++) {
-        currFitness = Math.max(currFitness, this.run(new ExtendedState(), this.pop.getIndividual(i).getAllGenes()));
+      double currFitness = 0;
+      for (int j=0; j<NUM_RUNS; j++) {
+        currFitness += this.run(new ExtendedState(), this.pop.getIndividual(i).getAllGenes());
       }
+      currFitness /= NUM_RUNS;
       this.pop.getIndividual(i).setFitnessValue(currFitness);
-      // System.out.println(currFitness + " : " + Arrays.toString(this.pop.getIndividual(i).getAllGenes()));
-      // System.out.println(currFitness);
     }
     // Return the weights from the best Individual
     return this.pop.getFittest().getAllGenes();
   }
 
   public static void main(String[] args) {
-    int nPopulation=100, nIterations=2000;
-    Float maxWeightValue=50.0f, minWeightValue=-50.0f;
+    int nPopulation=500, nIterations=100;
+    double maxWeightValue=10.0, minWeightValue=-10.0;
     int nWeights = ExtendedState.NUM_FEATURES;
 
     System.out.println("New GeneticLearner");
     GeneticLearner gl = new GeneticLearner(nPopulation,nWeights,maxWeightValue,minWeightValue);
-    Float[] res = gl.start(new Float[1], nIterations);
+    double[] res = gl.start(new double[1], nIterations);
     System.out.println("Learned weights: " + Arrays.toString(res));
 
     // Test the final result
@@ -61,8 +61,8 @@ public class GeneticLearner extends Learner {
 }
 
 class Population {
-  private static final Float MUTATION_PROB = 0.02f;  // Probability of mutation
-  private static final Float FIFTY_PERCENT = 0.5f;   // For selecting parent in crossover
+  private static final double MUTATION_PROB = 0.02;  // Probability of mutation
+  private static final double FIFTY_PERCENT = 0.5;   // For selecting parent in crossover
   private static final int TOURNAMENT_SIZE = 5;     // Using tournament selection method
 
   private static Random rand = new Random();
@@ -131,7 +131,7 @@ class Population {
     Individual child = new Individual();
 
     for (int i=0; i<Individual.getNumGenes(); i++) {
-      Float newGene = (rand.nextFloat()<FIFTY_PERCENT) ? parentA.getGene(i) : parentB.getGene(i);
+      double newGene = (rand.nextDouble()<FIFTY_PERCENT) ? parentA.getGene(i) : parentB.getGene(i);
       child.setGene(i, newGene);
     }
 
@@ -151,7 +151,7 @@ class Population {
 
   private void attemptMutation(Individual indiv) {
     for (int i=0; i<Individual.getNumGenes(); i++) {
-      if (rand.nextFloat() < MUTATION_PROB) {
+      if (rand.nextDouble() < MUTATION_PROB) {
         indiv.setGene(i, Individual.randGeneValue());
       }
     }
@@ -162,16 +162,16 @@ class Individual {
   private static Random rand = new Random();
 
   static int numGenes = 10;
-  static Float geneAllowedMax = 1.0f;
-  static Float geneAllowedMin = -1.0f;
+  static double geneAllowedMax = 1.0;
+  static double geneAllowedMin = -1.0;
 
-  private Float[] genes = new Float[numGenes];
-  private int fitnessValue;
+  private double[] genes = new double[numGenes];
+  private double fitnessValue;
 
   public Individual() {}
 
   /* Global control */
-  public static void setDefaultValues(int nGenes, Float gAllowedMax, Float gAllowedMin) {
+  public static void setDefaultValues(int nGenes, double gAllowedMax, double gAllowedMin) {
     numGenes = nGenes;
     geneAllowedMax = gAllowedMax;
     geneAllowedMin = gAllowedMin;
@@ -179,25 +179,25 @@ class Individual {
   public static int getNumGenes() {
     return numGenes;
   }
-  public static Float randGeneValue() {
-    return rand.nextFloat()*(geneAllowedMax-geneAllowedMin)+geneAllowedMin;
+  public static double randGeneValue() {
+    return rand.nextDouble()*(geneAllowedMax-geneAllowedMin)+geneAllowedMin;
   }
 
   /* Instance behaviour */
-  public int getFitnessValue() {
+  public double getFitnessValue() {
     return fitnessValue;
   }
-  public void setFitnessValue(int fitnessValue) {
+  public void setFitnessValue(double fitnessValue) {
     this.fitnessValue = fitnessValue;
   }
 
-  public Float[] getAllGenes() {
+  public double[] getAllGenes() {
     return this.genes;
   }
-  public Float getGene(int index) {
+  public double getGene(int index) {
     return this.genes[index];
   }
-  public void setGene(int index, Float value) {
+  public void setGene(int index, double value) {
     this.genes[index] = value;
   }
 

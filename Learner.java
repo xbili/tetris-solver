@@ -12,9 +12,9 @@ public abstract class Learner {
      *
      * @return optimized weight after learning has taken place
      */
-    public Float[] start(Float[] initialWeights, int maxIterations) {
+    public double[] start(double[] initialWeights, int maxIterations) {
         int iterations = maxIterations;
-        Float[] weights = initialWeights;
+        double[] weights = initialWeights;
         while (iterations > 0) {
             weights = learn(weights);
 
@@ -40,7 +40,7 @@ public abstract class Learner {
      *
      * @return number of blocks cleared by the agent
      */
-    protected int run(ExtendedState state, Float[] weights) {
+    protected int run(ExtendedState state, double[] weights) {
         PlayerSkeleton player = new PlayerSkeleton();
 
         // Create new display frame only if display setting is true
@@ -59,7 +59,7 @@ public abstract class Learner {
      *
      * @return updated weight after ONE iteration of the learning algorithm
      */
-    protected abstract Float[] learn(Float[] weights);
+    protected abstract double[] learn(double[] weights);
 
     /**
      * Draws updated state onto the TFrame

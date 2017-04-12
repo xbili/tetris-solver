@@ -6,7 +6,7 @@ import java.util.Arrays;
  */
 public class ExtendedState extends State {
 
-    public static final int NUM_FEATURES = 21;
+    public static final int NUM_FEATURES = 5;
 
     ExtendedState previousState = null;
     public boolean isCloned = false;
@@ -172,7 +172,7 @@ public class ExtendedState extends State {
     /**
      * @return extended state of what will happen if a certain move is made.
      */
-    public Float[] test(int move) {
+    public double[] test(int move) {
         ExtendedState es = new ExtendedState(this);
         es.makeMove(move);
         return es.getFeatures();
@@ -209,6 +209,17 @@ public class ExtendedState extends State {
             adjacentColumnHeightAbsoluteDifferences[col] = Math.abs(heights[col]-heights[col+1]);
         }
         return adjacentColumnHeightAbsoluteDifferences;
+    }
+    
+    private double getAdjacentColumnHeightAverageDifference() {
+    	int[] absoluteDifferences = getAdjacentColumnHeightAbsoluteDifferences();
+    	double total = 0;
+    	int count = 0;
+    	for (int value : absoluteDifferences) {
+    		total += value;
+    		count++;
+    	}
+    	return (count>0) ? total / count : 0;
     }
 
     /**
@@ -294,21 +305,17 @@ public class ExtendedState extends State {
      * Calculated feature
      * @return calculated features
      */
-    public Float[] getFeatures() {
-        ArrayList<Float> features = new ArrayList<>(21);
-        int[] heights = getColumnHeights();
-        for (int height : heights) {
-            features.add((float)height);
-        }
-        int[] adjColHiDiffs = getAdjacentColumnHeightAbsoluteDifferences();
-        for (int adjColHiDiff : adjColHiDiffs) {
-            features.add((float)adjColHiDiff);
-        }
-        features.add((float)getMaximumColumnHeight());
-        features.add((float)getNumberOfHoles());
+    public double[] getFeatures() {
+    	
+    	double holesMade = getNumberOfHolesMade();
+        double linesCleared = getNumberOfLinesCleared();
+        double aggregateHeight = 0; // getAggregateHeight();
+        double compactness = 0; 	// getCompactness();
+        double bumpiness = 0; 		// getBumpiness();
 
+//		getAdjacentColumnHeightAverageDifference();
 
-        return features.stream().map(i -> (float)i).toArray(Float[]::new);
+        return new double[]{holesMade, aggregateHeight, compactness, linesCleared, bumpiness};
 
     }
 }
