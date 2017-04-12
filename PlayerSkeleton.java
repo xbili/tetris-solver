@@ -24,7 +24,7 @@ public class PlayerSkeleton {
       return arr;
     }
     public double[] fixedWeights() {
-      double[] learnt = new double[] {-3.2517843, -4.5234013, -2.0706444, -1.6345274, 4.870776};
+      double[] learnt = new double[] {-1.2775037573630854, -6.201500663456625, 8.3250686453442, -3.3092722945585606, -1.0491323567650905};
       assert learnt.length==ExtendedState.NUM_FEATURES;
       double[] res = new double[learnt.length];
       for (int i=0; i<learnt.length; i++) {

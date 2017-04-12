@@ -33,11 +33,7 @@ public class GeneticLearner extends Learner {
     // Play a game with each Individual and update its fitness value
     for(int i=0; i<this.pop.getSize(); i++) {
       // TODO: Test whether playing multiple games and taking average/minimum matters
-      double currFitness = 0;
-      for (int j=0; j<NUM_RUNS; j++) {
-        currFitness += this.run(new ExtendedState(), this.pop.getIndividual(i).getAllGenes());
-      }
-      currFitness /= NUM_RUNS;
+      double currFitness = this.run(new ExtendedState(), this.pop.getIndividual(i).getAllGenes());
       this.pop.getIndividual(i).setFitnessValue(currFitness);
     }
     // Return the weights from the best Individual

@@ -18,57 +18,57 @@ public class ExtendedState extends State {
      * @return a copy of ExtendedState.
      */
     public ExtendedState(State s) {
-      this.clonedTurn = s.getTurnNumber();
-      this.clonedCleared = s.getRowsCleared();
-      this.clonedField = get2dClone(s.getField(), ROWS);
-      this.clonedTop = s.getTop().clone();
-      this.isCloned = true;
-      this.nextPiece = s.getNextPiece();
+        this.clonedTurn = s.getTurnNumber();
+        this.clonedCleared = s.getRowsCleared();
+        this.clonedField = get2dClone(s.getField(), ROWS);
+        this.clonedTop = s.getTop().clone();
+        this.isCloned = true;
+        this.nextPiece = s.getNextPiece();
     }
     public ExtendedState() {
-      super();
+        super();
     }
     //the next several arrays define the piece vocabulary in detail
     //width of the pieces [piece ID][orientation]
     protected static int[][] pWidth = {
-            {2},
-            {1,4},
-            {2,3,2,3},
-            {2,3,2,3},
-            {2,3,2,3},
-            {3,2},
-            {3,2}
+        {2},
+        {1,4},
+        {2,3,2,3},
+        {2,3,2,3},
+        {2,3,2,3},
+        {3,2},
+        {3,2}
     };
 
     //height of the pieces [piece ID][orientation]
     private static int[][] pHeight = {
-            {2},
-            {4,1},
-            {3,2,3,2},
-            {3,2,3,2},
-            {3,2,3,2},
-            {2,3},
-            {2,3}
+        {2},
+        {4,1},
+        {3,2,3,2},
+        {3,2,3,2},
+        {3,2,3,2},
+        {2,3},
+        {2,3}
     };
 
     private static int[][][] pBottom = {
-            {{0,0}},
-            {{0},{0,0,0,0}},
-            {{0,0},{0,1,1},{2,0},{0,0,0}},
-            {{0,0},{0,0,0},{0,2},{1,1,0}},
-            {{0,1},{1,0,1},{1,0},{0,0,0}},
-            {{0,0,1},{1,0}},
-            {{1,0,0},{0,1}}
+        {{0,0}},
+        {{0},{0,0,0,0}},
+        {{0,0},{0,1,1},{2,0},{0,0,0}},
+        {{0,0},{0,0,0},{0,2},{1,1,0}},
+        {{0,1},{1,0,1},{1,0},{0,0,0}},
+        {{0,0,1},{1,0}},
+        {{1,0,0},{0,1}}
     };
 
     private static int[][][] pTop = {
-            {{2,2}},
-            {{4},{1,1,1,1}},
-            {{3,1},{2,2,2},{3,3},{1,1,2}},
-            {{1,3},{2,1,1},{3,3},{2,2,2}},
-            {{3,2},{2,2,2},{2,3},{1,2,1}},
-            {{1,2,2},{3,2}},
-            {{2,2,1},{2,3}}
+        {{2,2}},
+        {{4},{1,1,1,1}},
+        {{3,1},{2,2,2},{3,3},{1,1,2}},
+        {{1,3},{2,1,1},{3,3},{2,2,2}},
+        {{3,2},{2,2,2},{2,3},{1,2,1}},
+        {{1,2,2},{3,2}},
+        {{2,2,1},{2,3}}
     };
 
     private int randomPiece() {
@@ -162,11 +162,11 @@ public class ExtendedState extends State {
         }
     }
     public int[][] get2dClone(int[][] input, int num1dArrays) {
-      int [][] arrClone = new int[num1dArrays][];
-      for(int i = 0; i < num1dArrays; i++) {
-        arrClone[i] = input[i].clone();
-      }
-      return arrClone;
+        int [][] arrClone = new int[num1dArrays][];
+        for(int i = 0; i < num1dArrays; i++) {
+            arrClone[i] = input[i].clone();
+        }
+        return arrClone;
     }
 
     /**
@@ -210,16 +210,15 @@ public class ExtendedState extends State {
         }
         return adjacentColumnHeightAbsoluteDifferences;
     }
-    
-    private double getAdjacentColumnHeightAverageDifference() {
-    	int[] absoluteDifferences = getAdjacentColumnHeightAbsoluteDifferences();
-    	double total = 0;
-    	int count = 0;
-    	for (int value : absoluteDifferences) {
-    		total += value;
-    		count++;
-    	}
-    	return (count>0) ? total / count : 0;
+
+    private int getAggregateHeight() {
+        int[] heights = getColumnHeights();
+        int sum = 0;
+        for (int i = 0; i < heights.length; i++) {
+            sum += heights[i];
+        }
+
+        return sum;
     }
 
     /**
@@ -301,21 +300,35 @@ public class ExtendedState extends State {
         return getRowsCleared() - this.previousState.getRowsCleared();
     }
 
+    private double getCompactness() {
+        double weight = 1;
+        double sum = 0;
+
+        for (int i = 0; i < ROWS; i++) {
+            for (int j = 0; j < COLS; j++) {
+                if (getField()[i][j] != 0) {
+                    sum += weight;
+                }
+            }
+            weight *= 0.5;
+        }
+
+        return sum;
+    }
+
     /**
      * Calculated feature
      * @return calculated features
      */
     public double[] getFeatures() {
-    	
-    	double holesMade = getNumberOfHolesMade();
+        double holesMade = getNumberOfHolesMade();
+        double aggregateHeight = getAggregateHeight();
+        double compactness = getCompactness();
         double linesCleared = getNumberOfLinesCleared();
-        double aggregateHeight = 0; // getAggregateHeight();
-        double compactness = 0; 	// getCompactness();
-        double bumpiness = 0; 		// getBumpiness();
+        double bumpiness = getBumpiness();
 
-//		getAdjacentColumnHeightAverageDifference();
+        double[] features = { holesMade, aggregateHeight, compactness, linesCleared, bumpiness };
 
-        return new double[]{holesMade, aggregateHeight, compactness, linesCleared, bumpiness};
-
+        return features;
     }
 }
