@@ -1,4 +1,5 @@
 import java.util.Random;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.lang.Math;
 
@@ -31,13 +32,21 @@ public class GeneticLearner extends Learner {
   // TODO: weights[] does not apply
   protected double[] learn(double[] weights) {
     // Play a game with each Individual and update its fitness value
-    for(int i=0; i<this.pop.getSize(); i++) {
-      // TODO: Test whether playing multiple games and taking average/minimum matters
-      double currFitness = this.run(new ExtendedState(), this.pop.getIndividual(i).getAllGenes());
-      this.pop.getIndividual(i).setFitnessValue(currFitness);
-    }
+    // for(int i=0; i<this.pop.getSize(); i++) {
+    //   // TODO: Test whether playing multiple games and taking average/minimum matters
+    //   double currFitness = this.run(new ExtendedState(), this.pop.getIndividual(i).getAllGenes());
+    //   this.pop.getIndividual(i).setFitnessValue(currFitness);
+    // }
+
+    ArrayList<Individual> individuals = this.pop.getIndividuals();
+    individuals.parallelStream().forEach(individual -> updateIndividualFitness(individual));
     // Return the weights from the best Individual
     return this.pop.getFittest().getAllGenes();
+  }
+
+  private void updateIndividualFitness(Individual individual) {
+    double currFitness = this.run(new ExtendedState(), individual.getAllGenes());
+    individual.setFitnessValue(currFitness);
   }
 
   public static void main(String[] args) {
@@ -89,6 +98,12 @@ class Population {
   public Individual getIndividual(int index) {
     return this.individuals[index];
   }
+
+  public ArrayList<Individual> getIndividuals() {
+    ArrayList<Individual> listOfIndividuals = new ArrayList<>(Arrays.asList(this.individuals));
+    return listOfIndividuals;
+  }
+
   public void saveIndividual(int index, Individual indiv) {
     this.individuals[index] = indiv;
   }
