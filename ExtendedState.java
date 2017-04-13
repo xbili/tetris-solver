@@ -246,7 +246,7 @@ public class ExtendedState extends State {
         int[][] field = getField();
         int numHoles = 0;
         for (int col = 0; col < COLS; col++) {
-            for (int row = 0; row < this.getTop()[col] - 1; row++) {
+            for (int row = 0; row < clonedTop[col] - 1; row++) {
                 if (field[row][col] == 0) {
                     numHoles++;
                 }
