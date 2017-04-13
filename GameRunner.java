@@ -15,7 +15,7 @@ public class GameRunner {
      *
      * @return number of blocks cleared by the agent
      */
-    private static int run(ExtendedState state, Float[] weights) {
+    private static int run(ExtendedState state, double[] weights) {
         PlayerSkeleton player = new PlayerSkeleton();
 
         // Create new display frame only if display setting is true
@@ -39,9 +39,9 @@ public class GameRunner {
     }
     private static void parseWeights(String arg) {
         String[] args = arg.split(" ");
-        Float weights[] = new Float[args.length];
+        double weights[] = {};
         for(int i = 0; i < args.length; i++) {
-            weights[i] = Float.parseFloat(args[i]);
+            weights[i] = (double) Float.parseFloat(args[i]);
         }
 
         int result = run(new ExtendedState(), weights);

@@ -10,10 +10,10 @@ public class ExtendedState extends State {
 
     ExtendedState previousState = null;
     public boolean isCloned = false;
-    public int clonedTurn;
-    public int clonedCleared;
-    public int[][] clonedField;
-    public int[] clonedTop;
+    public int clonedTurn = 0;
+    public int clonedCleared = 0;
+    public int[][] clonedField = new int[ROWS][COLS];
+    public int[] clonedTop = new int[COLS];
     /**
      * @return a copy of ExtendedState.
      */
@@ -79,6 +79,9 @@ public class ExtendedState extends State {
         return isCloned ? clonedField : super.getField();
     }
 
+    public int getRowsCleared() {
+        return isCloned ? clonedCleared : super.getRowsCleared();
+    }
 
     // Make a move based on the move index - its order in the legalMoves list
     public void makeMove(int move) {
@@ -183,7 +186,7 @@ public class ExtendedState extends State {
      * @return int[] hs: column height
      */
     private int[] getColumnHeights() {
-        return top;
+        return isCloned ? clonedTop : super.getTop();
     }
     /**
      * Feature 11-19:  adjacent height differences
@@ -272,8 +275,6 @@ public class ExtendedState extends State {
      * @return number of holes made
      */
     private int getNumberOfLinesCleared() {
-        System.out.println(getRowsCleared());
-        System.out.println(this.previousState.getRowsCleared());
         return getRowsCleared() - this.previousState.getRowsCleared();
     }
 

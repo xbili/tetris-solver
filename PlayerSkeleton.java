@@ -10,7 +10,7 @@ public class PlayerSkeleton {
     // Implement this function to have a working system
     // Legal move, 2D array: [Orientation, Slot]
     public int pickMove(ExtendedState s, int[][] legalMoves) {
-        double[] weights = { 0.5611230200133105, -0.1007153658341158, -0.34627119244043836, 2.819373858293094, 0.7798306907387709, -0.042311193398031854 };
+        double[] weights = { 0.35635480662382224, -2.0540732823872383, -0.07875115892525542, 2.184969056269532, 0.9643824972568638, -0.2974681607895562, -0.014314780723829301, -0.4258138335920463 };
         return pickMove(s, legalMoves, weights);
     }
 
