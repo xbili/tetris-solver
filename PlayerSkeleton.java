@@ -4,8 +4,7 @@ import java.util.Collections;
 import java.util.Random;
 
 public class PlayerSkeleton {
-    private static final int ROWS = 21;
-    private static final int COLS = 10;
+    private static final int GAME_RUNS = 20;
 
     // Implement this function to have a working system
     // Legal move, 2D array: [Orientation, Slot]
@@ -45,16 +44,27 @@ public class PlayerSkeleton {
     }
 
     public static void main(String[] args) {
-        ExtendedState s = new ExtendedState();
-        new TFrame(s);
-        PlayerSkeleton p = new PlayerSkeleton();
-        while(!s.hasLost()) {
-            s.makeMove(p.pickMove(s,s.legalMoves()));
-            s.draw();
-            s.drawNext(0,0);
+        double sum = 0;
+        int count = GAME_RUNS;
+
+        while (count > 0) {
+            ExtendedState s = new ExtendedState();
+            PlayerSkeleton p = new PlayerSkeleton();
+            while(!s.hasLost()) {
+                s.makeMove(p.pickMove(s,s.legalMoves()));
+            }
+            System.out.println("Lines cleared in iteration #"
+                + (GAME_RUNS - count + 1) 
+                +  ": "
+                + s.getRowsCleared()
+            );
+
+            sum += s.getRowsCleared();
+
+            count--;
         }
 
-        System.out.println("Lines cleared: " + s.getRowsCleared());
+        System.out.println("Average number of lines cleared: " + sum / GAME_RUNS);
     }
 
 }
