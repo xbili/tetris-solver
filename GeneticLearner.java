@@ -8,7 +8,7 @@ import java.lang.Math;
     http://stackoverflow.com/questions/1575061/ga-written-in-java */
 
 public class GeneticLearner extends Learner {
-  private static final int NUM_RUNS = 5;
+  private static final int NUM_RUNS = 3;
   private Population pop;
 
   public GeneticLearner(int popSize, int numWeights, double maxWeightValue, double minWeightValue) {
@@ -46,6 +46,10 @@ public class GeneticLearner extends Learner {
 
   private void updateIndividualFitness(Individual individual) {
     double currFitness = this.run(new ExtendedState(), individual.getAllGenes());
+    for(int i=1; i<NUM_RUNS; i++) {
+    	currFitness += this.run(new ExtendedState(), individual.getAllGenes());
+    }
+    currFitness /= NUM_RUNS;
     individual.setFitnessValue(currFitness);
   }
 

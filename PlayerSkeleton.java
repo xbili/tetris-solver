@@ -24,7 +24,7 @@ public class PlayerSkeleton {
       return arr;
     }
     public double[] fixedWeights() {
-      double[] learnt = new double[] {-1.2775037573630854, -6.201500663456625, 8.3250686453442, -3.3092722945585606, -1.0491323567650905};
+      double[] learnt = new double[] {-0.81337675495684, -9.899307912320644, 9.987112431323887, 6.389129519558114, -1.8599693017065704};
       assert learnt.length==ExtendedState.NUM_FEATURES;
       double[] res = new double[learnt.length];
       for (int i=0; i<learnt.length; i++) {
@@ -70,17 +70,17 @@ public class PlayerSkeleton {
     }
     public static void main(String[] args) {
         ExtendedState s = new ExtendedState();
-        new TFrame(s);
+//        new TFrame(s);
         PlayerSkeleton p = new PlayerSkeleton();
         while(!s.hasLost()) {
             s.makeMove(p.pickMove(s,s.legalMoves()));
-            s.draw();
-            s.drawNext(0,0);
-            try {
-                Thread.sleep(300);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+//            s.draw();
+//            s.drawNext(0,0);
+//            try {
+//                Thread.sleep(300);
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
         }
 
        System.out.println("You have completed "+s.getRowsCleared()+" rows.");
