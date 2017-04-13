@@ -6,7 +6,7 @@ import java.util.Arrays;
  */
 public class ExtendedState extends State {
 
-    public static final int NUM_FEATURES = 5;
+    public static final int NUM_FEATURES = 3;
 
     ExtendedState previousState = null;
     public boolean isCloned = false;
@@ -148,7 +148,7 @@ public class ExtendedState extends State {
                         }
                         // Lower the top
                         clonedTop[c]--;
-                        while(clonedTop[c]>=1 && clonedField[clonedTop[c]-1][c]==0)	clonedTop[c]--;
+                        while(clonedTop[c]>=1 && clonedField[clonedTop[c]-1][c]==0) clonedTop[c]--;
                     }
                 }
             }
@@ -238,18 +238,23 @@ public class ExtendedState extends State {
         return (row >= 0 && row < ROWS && col >=0 && col < COLS);
     }
 
+    /**
+     * Feature 21: Number of Holes
+     * @return number of holes
+     */
     private int getNumberOfHoles() {
         int[][] field = getField();
         int numHoles = 0;
         for (int col = 0; col < COLS; col++) {
-            for (int row = 0; row < s.top[col] - 1; row++) {
+            for (int row = 0; row < this.getTop()[col] - 1; row++) {
                 if (field[row][col] == 0) {
-                    sumHoles++;
+                    numHoles++;
                 }
             }
         }
         return numHoles;
     }
+
     /**
      * Feature 22: Bumpiness:
      the sum of the absolute differences in height between adjacent
