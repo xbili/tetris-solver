@@ -174,9 +174,23 @@ public class State {
         // Height if the first column makes contact
         int height = top[slot]-pBottom[nextPiece][orient][0];
         // For each column beyond the first in the piece
-        for(int c = 1; c < pWidth[nextPiece][orient];c++) {
-            height = Math.max(height,top[slot+c]-pBottom[nextPiece][orient][c]);
-        }
+
+            for (int c = 1; c < pWidth[nextPiece][orient]; c++) {
+                try {
+                    height = Math.max(height, top[slot + c] - pBottom[nextPiece][orient][c]);
+                } catch (ArrayIndexOutOfBoundsException e) {
+                    System.out.println(orient);
+                    System.out.println(slot);
+                    System.out.println(c);
+                    System.out.println(height);
+                    System.out.println(pWidth[nextPiece][orient]);
+                    System.out.println(nextPiece);
+                    System.out.println(top.toString());
+//                    System.out.println(pBt.toString());
+
+                }
+            }
+
 
         // Check if game ended
         if(height+pHeight[nextPiece][orient] >= ROWS) {

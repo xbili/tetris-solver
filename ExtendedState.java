@@ -14,8 +14,16 @@ public class ExtendedState extends State {
     public int clonedCleared = 0;
     public int[][] clonedField = new int[ROWS][COLS];
     public int[] clonedTop = new int[COLS];
+
+    public int[][] get2dClone(int[][] input, int num1dArrays) {
+        int [][] arrClone = new int[num1dArrays][];
+        for(int i = 0; i < num1dArrays; i++) {
+            arrClone[i] = input[i].clone();
+        }
+        return arrClone;
+    }
     /**
-     * @return a copy of ExtendedState.
+     * @return a copy/clone of ExtendedState.
      */
     public ExtendedState(State s) {
         this.clonedTurn = s.getTurnNumber();
@@ -81,6 +89,9 @@ public class ExtendedState extends State {
 
     public int getRowsCleared() {
         return isCloned ? clonedCleared : super.getRowsCleared();
+    }
+    public int[] getTop() {
+        return isCloned ? clonedTop : super.getTop();
     }
 
     // Make a move based on the move index - its order in the legalMoves list
@@ -164,21 +175,15 @@ public class ExtendedState extends State {
             return super.makeMove(orient, slot);
         }
     }
-    public int[][] get2dClone(int[][] input, int num1dArrays) {
-        int [][] arrClone = new int[num1dArrays][];
-        for(int i = 0; i < num1dArrays; i++) {
-            arrClone[i] = input[i].clone();
-        }
-        return arrClone;
-    }
+
 
     /**
      * @return extended state of what will happen if a certain move is made.
      */
     public double[] test(int move) {
-        ExtendedState es = new ExtendedState(this);
-        es.makeMove(move);
-        return es.getFeatures();
+        ExtendedState clonedState = new ExtendedState(this); //cloned
+        clonedState.makeMove(move);
+        return clonedState.getFeatures();
     }
 
     /**
@@ -186,7 +191,7 @@ public class ExtendedState extends State {
      * @return int[] hs: column height
      */
     private int[] getColumnHeights() {
-        return isCloned ? clonedTop : super.getTop();
+        return getTop();
     }
     /**
      * Feature 11-19:  adjacent height differences
@@ -236,12 +241,13 @@ public class ExtendedState extends State {
         int[][] field = getField();
         int numHoles = 0;
         for (int col = 0; col < COLS; col++) {
-            for (int row = 0; row < clonedTop[col] - 1; row++) {
+            for (int row = 0; row < getTop()[col] - 1; row++) {
                 if (field[row][col] == 0) {
                     numHoles++;
                 }
             }
         }
+
         return numHoles;
     }
 
