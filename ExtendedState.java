@@ -238,30 +238,18 @@ public class ExtendedState extends State {
         return (row >= 0 && row < ROWS && col >=0 && col < COLS);
     }
 
-    private boolean isHole(int row, int col) {
-        int[][] field = getField();
-        return ((!inGameBoundary(row-1, col-1) || field[row-1][col-1] !=0) &&
-                (!inGameBoundary(row, col-1) || field[row][col-1] !=0) &&
-                (!inGameBoundary(row+1, col-1) || field[row+1][col-1] !=0) &&
-                (!inGameBoundary(row-1, col)|| field[row-1][col] !=0) &&
-                (inGameBoundary(row, col) || field[row][col] ==0) &&
-                (!inGameBoundary(row+1, col) || field[row+1][col] == 0) &&
-                (!inGameBoundary(row-1, col+1) || field[row-1][col+1] !=0) &&
-                (!inGameBoundary(row, col+1) || field[row][col+1] !=0) &&
-                (!inGameBoundary(row+1, col+1)  || field[row+1][col+1] !=0));
-    }
     /**
      * Feature 21: Number of Holes
      * @return number of holes
      */
     private int getNumberOfHoles() {
+        int[][] field = getField();
         int numHoles = 0;
-        for (int row = 0; row < ROWS; row ++) {
-            for (int col = 0; col < COLS; col++) {
-                if (isHole(row, col)) {
-                    numHoles++;
+        for (int col = 0; col < COLS; col++) {
+            for (int row = 0; row < s.top[col] - 1; row++) {
+                if (field[row][col] == 0) {
+                    sumHoles++;
                 }
-
             }
         }
         return numHoles;
@@ -322,7 +310,7 @@ public class ExtendedState extends State {
      */
     public double[] getFeatures() {
         double holesMade = getNumberOfHolesMade();
-        double aggregateHeight = getAggregateHeight();
+        double aggregateHeighx  t = getAggregateHeight();
         double compactness = getCompactness();
         double linesCleared = getNumberOfLinesCleared();
         double bumpiness = getBumpiness();
