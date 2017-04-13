@@ -246,9 +246,9 @@ public class ExtendedState extends State {
         int[][] field = getField();
         int numHoles = 0;
         for (int col = 0; col < COLS; col++) {
-            for (int row = 0; row < s.top[col] - 1; row++) {
+            for (int row = 0; row < this.getTop()[col] - 1; row++) {
                 if (field[row][col] == 0) {
-                    sumHoles++;
+                    numHoles++;
                 }
             }
         }
@@ -310,7 +310,7 @@ public class ExtendedState extends State {
      */
     public double[] getFeatures() {
         double holesMade = getNumberOfHolesMade();
-        double aggregateHeighx  t = getAggregateHeight();
+        double aggregateHeight = getAggregateHeight();
         double compactness = getCompactness();
         double linesCleared = getNumberOfLinesCleared();
         double bumpiness = getBumpiness();
