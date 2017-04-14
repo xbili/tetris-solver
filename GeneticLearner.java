@@ -8,23 +8,26 @@ http://www.theprojectspot.com/tutorial-post/creating-a-genetic-algorithm-for-beg
 http://stackoverflow.com/questions/1575061/ga-written-in-java */
 
 public class GeneticLearner {
-	private static final int NUM_RUNS = 3;
+	private static final int POPULATION_SIZE = 500;
+	private static final int ITERATIONS = 100;
+	private static final double INDIV_GENE_MAX = 1.0;
+	private static final double INDIV_GENE_MIN = -1.0;
+	private static final int FITNESS_NUM_GAMES = 2;
+	
 	private boolean display = false;
 	private Population pop;
 
 	public static void main(String[] args) {
-		int nPopulation=500, nIterations=100;
-		double maxWeightValue=10.0, minWeightValue=-10.0;
-		int nWeights = ExtendedState.NUM_FEATURES;
+		int nWeights = new ExtendedState(new State()).getFeatures().length;
 
 		System.out.println("New GeneticLearner");
-		GeneticLearner gl = new GeneticLearner(nPopulation,nWeights,maxWeightValue,minWeightValue);
-		double[] res = gl.start(nIterations);
-		System.out.println("Learned weights: " + Arrays.toString(res));
+		GeneticLearner gl = new GeneticLearner(POPULATION_SIZE,nWeights,INDIV_GENE_MAX,INDIV_GENE_MIN);
+		double[] learnedWeights = gl.start(ITERATIONS);
+		System.out.println("Learned weights: " + Arrays.toString(learnedWeights));
 
 		// Test the final result
 		gl.setDisplay(true);
-		System.out.println("Final score: " + Integer.toString(gl.run(new ExtendedState(), res)));
+		System.out.println("Final score: " + Integer.toString(gl.run(new ExtendedState(), learnedWeights)));
 	}
 
 	public GeneticLearner(int popSize, int numWeights, double maxWeightValue, double minWeightValue) {
@@ -46,17 +49,21 @@ public class GeneticLearner {
 	protected double[] learn() {
 		ArrayList<Individual> individuals = this.pop.getIndividuals();
 		// Play a game with each Individual and update its fitness value
-		individuals.parallelStream().forEach(individual -> updateIndividualFitness(individual));
+		for(int i=0; i<this.pop.getSize(); i++) {
+			updateIndividualFitness(individuals.get(i));
+		}
+		// FIXME: Parallel implementation sometimes throws arrayOutOfBounds 10.
+		// individuals.parallelStream().forEach(individual -> updateIndividualFitness(individual));
 		// Return the weights from the best Individual
 		return this.pop.getFittest().getAllGenes();
 	}
 
 	private void updateIndividualFitness(Individual individual) {
 		double currFitness = this.run(new ExtendedState(), individual.getAllGenes());
-		for(int i=1; i<NUM_RUNS; i++) {
+		for(int i=1; i<FITNESS_NUM_GAMES; i++) {
 			currFitness += this.run(new ExtendedState(), individual.getAllGenes());
 		}
-		currFitness /= NUM_RUNS;
+		currFitness /= FITNESS_NUM_GAMES;
 		individual.setFitnessValue(currFitness);
 	}
 

@@ -4,9 +4,6 @@ import java.util.Collections;
 import java.util.Random;
 
 public class PlayerSkeleton {
-    private static final int ROWS = 21;
-    private static final int COLS = 10;
-
     // Implement this function to have a working system
     // Legal move, 2D array: [Orientation, Slot]
     public int pickMove(ExtendedState s, int[][] legalMoves) {
@@ -24,8 +21,8 @@ public class PlayerSkeleton {
       return arr;
     }
     public double[] fixedWeights() {
-      double[] learnt = new double[] {-0.81337675495684, -9.899307912320644, 9.987112431323887, 6.389129519558114, -1.8599693017065704};
-      assert learnt.length==ExtendedState.NUM_FEATURES;
+      double[] learnt = new double[] {-0.19788222178554915, -0.2874858842939727, 0.18150219451516403, 0.4785008134368929, -0.9815312294134371, -0.22562292102334758, 0.6430686156519088, -0.6621711609518026, 0.3684393981208929, -0.2137848277389054, 0.07932158802776379};
+      assert learnt.length== new ExtendedState().getFeatures().length;
       double[] res = new double[learnt.length];
       for (int i=0; i<learnt.length; i++) {
         res[i] = learnt[i];
@@ -70,17 +67,17 @@ public class PlayerSkeleton {
     }
     public static void main(String[] args) {
         ExtendedState s = new ExtendedState();
-//        new TFrame(s);
+        new TFrame(s);
         PlayerSkeleton p = new PlayerSkeleton();
         while(!s.hasLost()) {
             s.makeMove(p.pickMove(s,s.legalMoves()));
-//            s.draw();
-//            s.drawNext(0,0);
-//            try {
-//                Thread.sleep(300);
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            }
+            s.draw();
+            s.drawNext(0,0);
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
 
        System.out.println("You have completed "+s.getRowsCleared()+" rows.");

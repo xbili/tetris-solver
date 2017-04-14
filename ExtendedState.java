@@ -6,8 +6,6 @@ import java.util.Arrays;
  */
 public class ExtendedState extends State {
 
-    public static final int NUM_FEATURES = 3;
-
     ExtendedState previousState = null;
     public boolean isCloned = false;
     public int clonedTurn;
@@ -275,9 +273,13 @@ public class ExtendedState extends State {
      * @return number of holes made
      */
     private int getNumberOfHolesMade() {
-        int lastNumHoles = this.previousState.getNumberOfHoles();
-        int numHoles = getNumberOfHoles();
-        return numHoles-lastNumHoles;
+    	try {
+	        int lastNumHoles = this.previousState.getNumberOfHoles();
+	        int numHoles = getNumberOfHoles();
+	        return numHoles-lastNumHoles;
+    	} catch (Exception e) {
+    		return 0;
+    	}
     }
 
     /**
@@ -285,9 +287,56 @@ public class ExtendedState extends State {
      * @return number of holes made
      */
     private int getNumberOfLinesCleared() {
-        return getRowsCleared() - this.previousState.getRowsCleared();
+    	try {
+    		return getRowsCleared() - this.previousState.getRowsCleared();
+	    } catch (Exception e) {
+			return 0;
+		}
     }
-
+    
+    /**
+     * Feature 25: Standard deviation of column heights
+     * @return number of holes made
+     */
+    private double getHeightStandardDeviation() {
+        int[] heights = getColumnHeights();
+        double avg = 0f;
+        double stddev = 0f;
+        for (int h : heights) {
+            avg += h;
+        }
+        avg /= COLS;
+        for (int h : heights) {
+            double diff = avg - h;
+            stddev += diff * diff;
+        }
+        return stddev;
+    }
+    
+    /**
+     * Feature 26: Wall
+     * @return wall(djt)
+     */
+    private double getNumberOfWalls() {
+        double numWalls = 0;
+        for (int i = 1; i < COLS-1; i++ ) {
+            int left = getTop()[i - 1] - getTop()[i];
+            int right = getTop()[i + 1] - getTop()[i];
+            if ((left >= 2) && (right >= 2)) {
+                numWalls += Math.min(left, right);
+            }
+        }
+        int col0 = getTop()[1] - getTop()[0];
+        int col10 = getTop()[COLS-2] - getTop()[COLS - 1];
+        if (col0 >= 2) {
+            numWalls += col0;
+        }
+        if (col10 >= 2) {
+            numWalls += col10;
+        }
+        return numWalls;
+    }
+    
     private double getCompactness() {
         double weight = 1;
         double sum = 0;
@@ -309,13 +358,15 @@ public class ExtendedState extends State {
      * @return calculated features
      */
     public double[] getFeatures() {
-        double holesMade = getNumberOfHolesMade();
+    	double holesMade = getNumberOfHoles();
         double aggregateHeight = getAggregateHeight();
         double compactness = getCompactness();
         double linesCleared = getNumberOfLinesCleared();
         double bumpiness = getBumpiness();
+        double stdDev = getHeightStandardDeviation();
+        double walls = getNumberOfWalls();
 
-        double[] features = { holesMade, aggregateHeight, compactness, linesCleared, bumpiness };
+        double[] features = { holesMade, aggregateHeight, compactness, linesCleared, bumpiness, stdDev, walls };
 
         return features;
     }
