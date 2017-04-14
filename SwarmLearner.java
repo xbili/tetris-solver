@@ -6,7 +6,7 @@ public class SwarmLearner {
 
     private static final int SWARM_SIZE = 1000;
     private static final int MAX_ITERATION = Integer.MAX_VALUE;
-    private static final int FEATURES = 7;
+    private static final int FEATURES = 8;
 
     // Bounds for randomized weight
     private static final double WEIGHT_UPPER_BOUND = 1;
@@ -45,7 +45,7 @@ public class SwarmLearner {
         double sum = 0;
         int count = GAME_RUNS;
         while (count > 0) {
-            ExtendedState state = new ExtendedState();
+            PlayerSkeleton.ExtendedState state = new PlayerSkeleton.ExtendedState();
             PlayerSkeleton player = new PlayerSkeleton();
 
             while(!state.hasLost()) {
@@ -221,7 +221,9 @@ public class SwarmLearner {
         }
 
         private void updateFitnessList() {
-            swarm.parallelStream().forEach(particle -> updateParticleFitness(particle));
+            for (int i = 0; i < fitnessValueList.length; i++) {
+                fitnessValueList[i] = swarm.get(i).getFitnessValue();
+            }
         }
 
         private void updateParticleFitness(Particle particle) {
