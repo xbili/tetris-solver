@@ -213,7 +213,6 @@ public class SwarmLearner {
                 // Set weights and velocities
                 p.setWeights(weights);
                 p.setVelocities(velocities);
-                p.setIndexInFitnessValueList(i);
 
                 // Add this particle to the swarm
                 swarm.add(p);
@@ -221,11 +220,9 @@ public class SwarmLearner {
         }
 
         private void updateFitnessList() {
-            swarm.parallelStream().forEach(particle -> updateParticleFitness(particle));
-        }
-
-        private void updateParticleFitness(Particle particle) {
-            fitnessValueList[particle.getIndexInFitnessValueList()] = particle.getFitnessValue();
+            for (int i = 0; i < SWARM_SIZE; i++) {
+                fitnessValueList[i] = swarm.get(i).getFitnessValue();
+            }
         }
 
         private double generateRandomDouble(double lower, double upper) {
@@ -255,18 +252,16 @@ public class SwarmLearner {
         private double fitnessValue;
         private double[] velocities;
         private double[] weights;
-        private int indexInFitnessValueList;
 
         public Particle() {
             super();
         }
 
-        public Particle(double fitnessValue, double[] velocities, double[] weights, int indexInFitnessValueList) {
+        public Particle(double fitnessValue, double[] velocities, double[] weights) {
             super();
             this.fitnessValue = fitnessValue;
             this.velocities = velocities;
             this.weights = weights;
-            this.indexInFitnessValueList = indexInFitnessValueList;
         }
 
         public double[] getVelocities() {
@@ -290,13 +285,6 @@ public class SwarmLearner {
             return evaluate(getWeights());
         }
 
-        public void setIndexInFitnessValueList(int indexInFitnessValueList) {
-            this.indexInFitnessValueList = indexInFitnessValueList;
-        }
-
-        public int getIndexInFitnessValueList() {
-            return indexInFitnessValueList;
-        }
     }
 
 }
