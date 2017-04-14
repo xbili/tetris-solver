@@ -365,7 +365,13 @@ public class ExtendedState extends State {
         double bumpiness = getBumpiness();
         double stdDev = getHeightStandardDeviation();
         double walls = getNumberOfWalls();
+        
+//        double holesSquared = holesMade*holesMade;
+//        double linesClearedSquared = linesCleared*linesCleared;
+//        double maxHeight = getMaximumColumnHeight();
+//        double maxHeightSquared = maxHeight*maxHeight;
 
+//        double[] features = { holesMade, aggregateHeight, compactness, linesCleared, bumpiness, stdDev, walls, holesSquared, linesClearedSquared, maxHeight, maxHeightSquared };
         double[] features = { holesMade, aggregateHeight, compactness, linesCleared, bumpiness, stdDev, walls };
 
         return features;
