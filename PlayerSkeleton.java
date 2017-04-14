@@ -350,9 +350,14 @@ public class PlayerSkeleton {
         * @return number of holes made
         */
         private int getNumberOfHolesMade() {
-            int lastNumHoles = this.previousState.getNumberOfHoles();
-            int numHoles = getNumberOfHoles();
-            return numHoles-lastNumHoles;
+        	// In case there is no previousState
+        	try {
+	            int lastNumHoles = this.previousState.getNumberOfHoles();
+	            int numHoles = getNumberOfHoles();
+	            return numHoles-lastNumHoles;
+        	} catch (Exception e) {
+        		return 0;
+        	}
         }
 
         /**
@@ -360,7 +365,12 @@ public class PlayerSkeleton {
         * @return number of holes made
         */
         private int getNumberOfLinesCleared() {
-            return getRowsCleared() - this.previousState.getRowsCleared();
+        	// In case there is no previousState
+        	try {
+        		return getRowsCleared() - this.previousState.getRowsCleared();
+        	} catch (Exception e) {
+        		return 0;
+        	}
         }
 
         /**

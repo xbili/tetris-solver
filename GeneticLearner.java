@@ -8,7 +8,7 @@ http://stackoverflow.com/questions/1575061/ga-written-in-java */
 
 public class GeneticLearner {
 	private static final int POPULATION_SIZE = 500;
-	private static final int ITERATIONS = 100;
+	private static final int ITERATIONS = 50;
 	private static final double INDIV_GENE_MAX = 1.0;
 	private static final double INDIV_GENE_MIN = -1.0;
 	private static final int FITNESS_NUM_GAMES = 5;
