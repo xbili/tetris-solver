@@ -9,7 +9,7 @@ public class PlayerSkeleton {
     // Implement this function to have a working system
     // Legal move, 2D array: [Orientation, Slot]
     public int pickMove(ExtendedState s, int[][] legalMoves) {
-        double[] weights = { 1.4939890559760567, -2.7315407242210563, -0.7388534648099786, 3.552967163124901, -0.05689703083028738, -0.014030831067594618, -0.06855356172819582 };
+        double[] weights = { 0.35138155805675464, -2.060682304074502, -0.06640136176191473, 2.1885343910663937, 0.9478116339692214, -0.2988755083566592, -0.015287575660316514, -0.425630211365857 };
 
         return pickMove(s, legalMoves, weights);
     }
@@ -46,23 +46,22 @@ public class PlayerSkeleton {
 
     public static void main(String[] args) {
         double sum = 0;
-        int count = GAME_RUNS;
-
-        while (count > 0) {
+        int count = 0;
+        while (count < GAME_RUNS) {
             ExtendedState s = new ExtendedState();
             PlayerSkeleton p = new PlayerSkeleton();
             while(!s.hasLost()) {
                 s.makeMove(p.pickMove(s,s.legalMoves()));
             }
             System.out.println("Lines cleared in iteration #"
-                + (GAME_RUNS - count + 1)
+                + count
                 +  ": "
                 + s.getRowsCleared()
             );
 
             sum += s.getRowsCleared();
 
-            count--;
+            count++;
         }
 
         System.out.println("Average number of lines cleared: " + sum / GAME_RUNS);
