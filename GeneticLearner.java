@@ -1,7 +1,6 @@
 import java.util.Random;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.lang.Math;
 
 /** References:
 http://www.theprojectspot.com/tutorial-post/creating-a-genetic-algorithm-for-beginners/3
@@ -12,13 +11,13 @@ public class GeneticLearner {
 	private static final int ITERATIONS = 100;
 	private static final double INDIV_GENE_MAX = 1.0;
 	private static final double INDIV_GENE_MIN = -1.0;
-	private static final int FITNESS_NUM_GAMES = 2;
+	private static final int FITNESS_NUM_GAMES = 5;
 	
 	private boolean display = false;
 	private Population pop;
 
 	public static void main(String[] args) {
-		int nWeights = new ExtendedState(new State()).getFeatures().length;
+		int nWeights = new PlayerSkeleton.ExtendedState(new State()).getFeatures().length;
 
 		System.out.println("New GeneticLearner");
 		GeneticLearner gl = new GeneticLearner(POPULATION_SIZE,nWeights,INDIV_GENE_MAX,INDIV_GENE_MIN);
@@ -27,7 +26,7 @@ public class GeneticLearner {
 
 		// Test the final result
 		gl.setDisplay(true);
-		System.out.println("Final score: " + Integer.toString(gl.run(new ExtendedState(), learnedWeights)));
+		System.out.println("Final score: " + Integer.toString(gl.run(new PlayerSkeleton.ExtendedState(), learnedWeights)));
 	}
 
 	public GeneticLearner(int popSize, int numWeights, double maxWeightValue, double minWeightValue) {
@@ -52,16 +51,16 @@ public class GeneticLearner {
 		for(int i=0; i<this.pop.getSize(); i++) {
 			updateIndividualFitness(individuals.get(i));
 		}
-		// FIXME: Parallel implementation sometimes throws arrayOutOfBounds 10.
+		// Parallel implementation
 		// individuals.parallelStream().forEach(individual -> updateIndividualFitness(individual));
 		// Return the weights from the best Individual
 		return this.pop.getFittest().getAllGenes();
 	}
 
 	private void updateIndividualFitness(Individual individual) {
-		double currFitness = this.run(new ExtendedState(), individual.getAllGenes());
+		double currFitness = this.run(new PlayerSkeleton.ExtendedState(), individual.getAllGenes());
 		for(int i=1; i<FITNESS_NUM_GAMES; i++) {
-			currFitness += this.run(new ExtendedState(), individual.getAllGenes());
+			currFitness += this.run(new PlayerSkeleton.ExtendedState(), individual.getAllGenes());
 		}
 		currFitness /= FITNESS_NUM_GAMES;
 		individual.setFitnessValue(currFitness);
@@ -72,7 +71,7 @@ public class GeneticLearner {
 	*
 	* @return number of blocks cleared by the agent
 	*/
-	protected int run(ExtendedState state, double[] weights) {
+	protected int run(PlayerSkeleton.ExtendedState state, double[] weights) {
 		PlayerSkeleton player = new PlayerSkeleton();
 
 		// Create new display frame only if display setting is true
