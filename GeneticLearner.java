@@ -183,7 +183,7 @@ class Population {
 	private Individual crossover(Individual parentA, Individual parentB) {
 		Individual child = new Individual();
 
-		for (int i=1; i<Individual.getNumGenes(); i++) {
+		for (int i=0; i<Individual.getNumGenes(); i++) {
 			double newGene = (rand.nextDouble()<FIFTY_PERCENT) ? parentA.getGene(i) : parentB.getGene(i);
 			child.setGene(i, newGene);
 		}
