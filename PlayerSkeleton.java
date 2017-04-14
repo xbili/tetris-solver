@@ -439,14 +439,13 @@ public class PlayerSkeleton {
         public double[] getFeatures() {
             double holesMade = getNumberOfHoles();
             double aggregateHeight = getAggregateHeight();
-            double maxHeight = getMaximumColumnHeight();
             double compactness = getCompactness();
             double linesCleared = getNumberOfLinesCleared();
             double bumpiness = getBumpiness();
             double stdDev = getHeightStandardDeviation();
             double walls = getNumberOfWalls();
 
-            double[] features = { holesMade, aggregateHeight, maxHeight, compactness, linesCleared, bumpiness, stdDev, walls };
+            double[] features = { holesMade, aggregateHeight, compactness, linesCleared, bumpiness, stdDev, walls };
 
             return features;
         }

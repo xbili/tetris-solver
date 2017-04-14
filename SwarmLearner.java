@@ -9,7 +9,7 @@ public class SwarmLearner {
 
     private static final int SWARM_SIZE = 1000;
     private static final int MAX_ITERATION = Integer.MAX_VALUE;
-    private static final int FEATURES = 8;
+    private static final int FEATURES = 7;
 
     // Bounds for randomized weight
     private static final double WEIGHT_UPPER_BOUND = 1;
