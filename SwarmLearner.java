@@ -1,7 +1,9 @@
 
 import java.util.Vector;
+import java.util.ArrayList;
 import java.util.Random;
 import java.util.Arrays;
+import java.util.concurrent.*;
 
 public class SwarmLearner {
 
@@ -65,6 +67,8 @@ public class SwarmLearner {
      * Runs the Particle Swarm Optimization.
      */
     private static class SwarmProcess {
+
+        private ExecutorService pool = Executors.newFixedThreadPool(10);
 
         private int swarmSize;
 
@@ -222,8 +226,20 @@ public class SwarmLearner {
         }
 
         private void updateFitnessList() {
+            ArrayList<Future<Double>> futures = new ArrayList<Future<Double>>(fitnessValueList.length);
             for (int i = 0; i < fitnessValueList.length; i++) {
-                fitnessValueList[i] = swarm.get(i).getFitnessValue();
+                Callable<Double> runGame = new RunGame(swarm.get(i));
+                Future<Double> future = this.pool.submit(runGame);
+                futures.add(future); 
+            }
+
+            for (int i = 0; i < fitnessValueList.length; i++) {
+                try {
+                    fitnessValueList[i] = futures.get(i).get();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    System.out.println("Thread interrupted.");
+                }
             }
         }
 
@@ -300,6 +316,20 @@ public class SwarmLearner {
         public int getIndexInFitnessValueList() {
             return indexInFitnessValueList;
         }
+    }
+
+    private static class RunGame implements Callable<Double> {
+
+        private Particle p;
+
+        public RunGame(Particle p) {
+            this.p = p;
+        }
+
+        public Double call() {
+            return this.p.getFitnessValue();
+        }
+
     }
 
 }
