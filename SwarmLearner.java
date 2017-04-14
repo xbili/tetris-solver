@@ -230,7 +230,7 @@ public class SwarmLearner {
             for (int i = 0; i < fitnessValueList.length; i++) {
                 Callable<Double> runGame = new RunGame(swarm.get(i));
                 Future<Double> future = this.pool.submit(runGame);
-                futures.add(future); 
+                futures.add(future);
             }
 
             for (int i = 0; i < fitnessValueList.length; i++) {
