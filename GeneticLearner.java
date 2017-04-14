@@ -183,7 +183,7 @@ class Population {
 	private Individual crossover(Individual parentA, Individual parentB) {
 		Individual child = new Individual();
 
-		for (int i=0; i<Individual.getNumGenes(); i++) {
+		for (int i=1; i<Individual.getNumGenes(); i++) {
 			double newGene = (rand.nextDouble()<FIFTY_PERCENT) ? parentA.getGene(i) : parentB.getGene(i);
 			child.setGene(i, newGene);
 		}
@@ -203,7 +203,7 @@ class Population {
 	}
 
 	private void attemptMutation(Individual indiv) {
-		for (int i=0; i<Individual.getNumGenes(); i++) {
+		for (int i=1; i<Individual.getNumGenes(); i++) {
 			if (rand.nextDouble() < MUTATION_PROB) {
 				indiv.setGene(i, Individual.randGeneValue());
 			}
@@ -225,7 +225,7 @@ class Individual {
 
 		/* Global control */
 		public static void setDefaultValues(int nGenes, double gAllowedMax, double gAllowedMin) {
-			numGenes = nGenes;
+			numGenes = nGenes + 1;
 			geneAllowedMax = gAllowedMax;
 			geneAllowedMin = gAllowedMin;
 		}
@@ -255,7 +255,8 @@ class Individual {
 		}
 
 		public void randAllGenes() {
-			for(int i=0; i<numGenes; i++) {
+			this.setGene(0, 1);
+			for(int i=1; i<numGenes; i++) {
 				this.setGene(i, randGeneValue());
 			}
 		}
