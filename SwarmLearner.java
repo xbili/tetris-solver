@@ -6,7 +6,7 @@ public class SwarmLearner {
 
     private static final int SWARM_SIZE = 1000;
     private static final int MAX_ITERATION = Integer.MAX_VALUE;
-    private static final int FEATURES = 7;
+    private static final int FEATURES = 6;
 
     // Bounds for randomized weight
     private static final double WEIGHT_UPPER_BOUND = 1;
@@ -220,7 +220,7 @@ public class SwarmLearner {
         }
 
         private void updateFitnessList() {
-            for (int i = 0; i < SWARM_SIZE; i++) {
+            for (int i = 0; i < swarmSize; i++) {
                 fitnessValueList[i] = swarm.get(i).getFitnessValue();
             }
         }

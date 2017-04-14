@@ -9,7 +9,7 @@ public class PlayerSkeleton {
     // Implement this function to have a working system
     // Legal move, 2D array: [Orientation, Slot]
     public int pickMove(ExtendedState s, int[][] legalMoves) {
-        double[] weights = { 1.6642394916266046, -1.9708737886315133, -0.022210657853123594, 2.0361215731499587, 4.417148226363702, -0.14670272719936395, -0.025665160535110365, -0.3717818058771683 };
+        double[] weights = { 1.4939890559760567, -2.7315407242210563, -0.7388534648099786, 3.552967163124901, -0.05689703083028738, -0.014030831067594618, -0.06855356172819582 };
 
         return pickMove(s, legalMoves, weights);
     }
@@ -55,7 +55,7 @@ public class PlayerSkeleton {
                 s.makeMove(p.pickMove(s,s.legalMoves()));
             }
             System.out.println("Lines cleared in iteration #"
-                + (GAME_RUNS - count + 1) 
+                + (GAME_RUNS - count + 1)
                 +  ": "
                 + s.getRowsCleared()
             );
