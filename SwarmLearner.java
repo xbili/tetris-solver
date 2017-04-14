@@ -4,7 +4,7 @@ import java.util.Arrays;
 
 public class SwarmLearner {
 
-    private static int SWARM_SIZE = 1000;
+    private static final int SWARM_SIZE = 1000;
     private static final int MAX_ITERATION = Integer.MAX_VALUE;
     private static final int FEATURES = 7;
 
@@ -30,7 +30,14 @@ public class SwarmLearner {
 
     // Test method to run the learner
     public static void main(String[] args) {
-        SwarmProcess pso = new SwarmProcess();
+        int swarmSize;
+        if (args.length > 0) {
+            swarmSize = Integer.parseInt(args[0]);
+        } else {
+            swarmSize = SWARM_SIZE;
+        }
+
+        SwarmProcess pso = new SwarmProcess(swarmSize);
         pso.execute();
     }
 
@@ -58,11 +65,13 @@ public class SwarmLearner {
      */
     private static class SwarmProcess {
 
+        private int swarmSize;
+
         // All particles in the swarm
         private Vector<Particle> swarm = new Vector<Particle>();
 
         // Personal best fitness value
-        private double[] pBest = new double[SWARM_SIZE];
+        private double[] pBest;
 
         // Personal best weight values
         private Vector<double[]> pBestWeights = new Vector<double[]>();
@@ -74,16 +83,22 @@ public class SwarmLearner {
         private double[] gBestWeights;
 
         // List of all fitness values
-        private double[] fitnessValueList = new double[SWARM_SIZE];
+        private double[] fitnessValueList;
 
         private double[] previousBest = new double[FEATURES + 1];
 
         // Random number generator for initial positions
         Random generator = new Random();
 
+        public SwarmProcess(int swarmSize) {
+            this.swarmSize = swarmSize;
+            fitnessValueList = new double[swarmSize];
+            pBest = new double[swarmSize];
+        }
+
         public void execute() {
             // Log run parameters
-            System.out.println("Swarm size: " + SWARM_SIZE);
+            System.out.println("Swarm size: " + swarmSize);
             System.out.println("Weight upper bound: " + WEIGHT_UPPER_BOUND);
             System.out.println("Weight lower bound: " + WEIGHT_LOWER_BOUND);
             System.out.println("Velocity upper bound: " + VEL_UPPER_BOUND);
@@ -97,7 +112,7 @@ public class SwarmLearner {
             initializeSwarm();
             updateFitnessList();
 
-            for (int i = 0; i < SWARM_SIZE; i++) {
+            for (int i = 0; i < swarmSize; i++) {
                 pBest[i] = fitnessValueList[i];
                 pBestWeights.add(swarm.get(i).getWeights());
             }
@@ -106,7 +121,7 @@ public class SwarmLearner {
             int iter = 0;
             while(iter < MAX_ITERATION) {
                 // Update personal best
-                for (int i = 0; i < SWARM_SIZE; i++) {
+                for (int i = 0; i < swarmSize; i++) {
                     if (fitnessValueList[i] > pBest[i]) {
                         pBest[i] = fitnessValueList[i];
                         pBestWeights.set(
@@ -122,7 +137,6 @@ public class SwarmLearner {
                 int bestParticleIndex = getMaxParticleIndex();
                 if (iter == 0 || fitnessValueList[bestParticleIndex] > gBest) {
                     System.out.println("New best fitness found: " + fitnessValueList[bestParticleIndex]);
-                    System.out.println("Current gBest: " + gBest);
 
                     gBest = fitnessValueList[bestParticleIndex];
                     gBestWeights = Arrays.copyOf(
@@ -134,7 +148,7 @@ public class SwarmLearner {
                 // Update velocity for each particle
                 double w = generateRandomDouble(W_LOWER_BOUND, W_UPPER_BOUND);
 
-                for (int i = 0; i < SWARM_SIZE; i++) {
+                for (int i = 0; i < swarmSize; i++) {
                     Particle p = swarm.get(i);
 
                     // Generate random updates
@@ -168,27 +182,18 @@ public class SwarmLearner {
                 System.out.println("Iteration #" + iter);
 
                 // Log out weights
-                System.out.print("Best weights: ");
-                for (int i = 0; i < gBestWeights.length; i++) {
-                    System.out.print(gBestWeights[i] + " ");
-                }
-                System.out.print("\n");
+                System.out.println("Best weights: " + Arrays.toString(gBestWeights));
 
                 // Log best number of lines cleared in that iteration
                 System.out.println("Best number of lines cleared: " + gBest);
                 System.out.println("=======================================");
-            }
-
-            System.out.println("\nSolution found at iteration " + (iter - 1));
-            for (int i = 0; i < gBestWeights.length; i++) {
-                System.out.print(gBestWeights[i] + " ");
             }
         }
 
         private void initializeSwarm() {
             Particle p;
 
-            for (int i = 0; i < SWARM_SIZE; i++) {
+            for (int i = 0; i < swarmSize; i++) {
                 p = new Particle();
 
                 // Randomize weights
